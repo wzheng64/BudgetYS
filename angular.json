@@ -120,6 +120,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "BudgetYS"
+    }
+  },
+  "defaultProject": "BudgetYS",
+  "cli": {
+    "analytics": "297ddd43-8528-4c33-935d-08d457be8ab1"
+  }
 }
