@@ -26,6 +26,7 @@ export class AuthComponent implements OnInit, OnDestroy {
       email: new FormControl(null, [Validators.required, Validators.email]),
       password: new FormControl(null, [Validators.required, Validators.minLength(8)])
     });
+    this.authService.autoLogin();
   }
 
   onSwitchMode(): void {

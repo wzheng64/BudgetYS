@@ -21,14 +21,14 @@
         <div class="form-group">
           <label for="email">Email</label>
           <input type="email" id="email" formControlName="email" class="form-control">
-          <span *ngIf="!authForm.get('email').valid  &&  authForm.get('email').touched" class="help-block">
+          <span *ngIf="!authForm.get('email').valid  &&  authForm.get('email').touched && !isLoginMode" class="help-block">
             <span *ngIf="authForm.get('email').errors['required']" class="help-block">This field is required!</span>
           </span>
         </div>
         <div class="form-group">
           <label for="password">Password</label>
           <input type="password" id="password" formControlName="password" class="form-control">
-          <span *ngIf="!authForm.get('password').valid  &&  authForm.get('password').touched" class="help-block">
+          <span *ngIf="!authForm.get('password').valid  &&  authForm.get('password').touched  && !isLoginMode" class="help-block">
             <span *ngIf="authForm.get('password').errors['required']" class="help-block">This field is required!</span>
             <span *ngIf="authForm.get('password').errors['minlength']" class="help-block">You need to have at least {{ authForm.get('password').errors['minlength'].requiredLength }}</span>
           </span>

@@ -5,10 +5,17 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
+
 import { AppComponent } from './app.component';
+import { HeaderComponent } from './header/header.component';
 import { MainComponent } from './main/main.component';
 import { AuthComponent } from './auth/auth.component';
 import { HttpClientModule } from '@angular/common/http';
+import { SummaryComponent } from './main/summary/summary.component';
+import { AccountsListComponent } from './main/accounts-list/accounts-list.component';
+import { AccountDetailsComponent } from './main/account-details/account-details.component';
+import { AccountComponent } from './main/accounts-list/account/account.component';
+import { BudgetingComponent } from './budgeting/budgeting.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +23,13 @@ import { HttpClientModule } from '@angular/common/http';
     MainComponent,
     AuthComponent,
     LoadingSpinnerComponent,
-    PlaceholderDirective
+    PlaceholderDirective,
+    SummaryComponent,
+    AccountsListComponent,
+    AccountDetailsComponent,
+    HeaderComponent,
+    AccountComponent,
+    BudgetingComponent
   ],
   imports: [
     BrowserModule,

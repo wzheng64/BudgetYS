@@ -1,7 +1,9 @@
+import { BudgetingComponent } from './budgeting/budgeting.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AuthGuard } from './auth/auth.guard';
+import { AuthRedirectGuard } from './auth/auth-redirect.guard';
 
 import { MainComponent } from './main/main.component';
 import { AuthComponent } from './auth/auth.component';
@@ -9,7 +11,8 @@ import { AuthComponent } from './auth/auth.component';
 const appRoutes: Routes = [
   { path: '', redirectTo: '/main', pathMatch: 'full'},
   { path: 'main', component: MainComponent, canActivate: [AuthGuard] },
-  { path: 'auth', component: AuthComponent }
+  { path: 'budgeting', component: BudgetingComponent, canActivate: [AuthGuard]},
+  { path: 'auth', component: AuthComponent, canActivate: [AuthRedirectGuard] }
 ];
 
 @NgModule({
