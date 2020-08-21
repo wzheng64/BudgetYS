@@ -16,6 +16,7 @@ import { AccountsListComponent } from './main/accounts-list/accounts-list.compon
 import { AccountDetailsComponent } from './main/account-details/account-details.component';
 import { AccountComponent } from './main/accounts-list/account/account.component';
 import { BudgetingComponent } from './budgeting/budgeting.component';
+import { AccountEditComponent } from './main/account-edit/account-edit.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { BudgetingComponent } from './budgeting/budgeting.component';
     AccountDetailsComponent,
     HeaderComponent,
     AccountComponent,
-    BudgetingComponent
+    BudgetingComponent,
+    AccountEditComponent
   ],
   imports: [
     BrowserModule,
