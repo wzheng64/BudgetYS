@@ -1,1 +1,35 @@
-<p>account-edit works!</p>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" formControlName="name" class="form-control">
+            </div>
+          </div>
+          <div class="col">
+            <label for="type">Type</label>
+            <select name="type" id="type" formControlName="type">
+              <option *ngFor="let type of getTypes()" value="type"> {{ type }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="balance">Starting Balance</label>
+              <span>$</span><input type="number" id="balance" formControlName="balance" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <button class="btn btn-outline-dark" type="submit">Create Account</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
