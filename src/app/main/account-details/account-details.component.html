@@ -1,1 +1,6 @@
-<p>account-details works!</p>
+<div class="container mt-5" *ngIf="!account;">
+  <h1 class="text-center">Click on an account for more details</h1>
+</div>
+<div class="container" *ngIf="account">
+  <p>The current account is {{ account.name }}.</p>
+</div>

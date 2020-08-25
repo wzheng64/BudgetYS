@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container mt-3">
   <div class="row">
     <div class="col">
       <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
@@ -12,7 +12,7 @@
           <div class="col">
             <label for="type">Type</label>
             <select name="type" id="type" formControlName="type">
-              <option *ngFor="let type of getTypes()" value="type"> {{ type }}</option>
+              <option *ngFor="let t of getTypes()" [value]="t"> {{ t }}</option>
             </select>
           </div>
         </div>

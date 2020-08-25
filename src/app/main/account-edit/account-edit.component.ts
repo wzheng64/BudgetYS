@@ -1,6 +1,11 @@
+import { DataStorageService } from './../../shared/data-storage.service';
+import { AuthService } from './../../auth/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AccountType } from '../../shared/enums';
+import { AccountService } from 'src/app/shared/account.service';
+import { Account } from 'src/app/shared/account.model';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-account-edit',
@@ -10,7 +15,8 @@ import { AccountType } from '../../shared/enums';
 export class AccountEditComponent implements OnInit {
   accountForm: FormGroup;
 
-  constructor() { }
+  constructor(private db: DataStorageService, private accountService: AccountService,
+              private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.accountForm = new FormGroup({
@@ -22,7 +28,9 @@ export class AccountEditComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log(this.accountForm);
+    this.accountService.addAccount(this.accountForm.value);
+    this.db.storeAccounts();
+    this.router.navigate(['/main']);
   }
 
   public getTypes(): string[] {

@@ -1,5 +1,15 @@
-<div class="container">
+<div class="container mt-3">
   <div class="row">
-    <button class="btn btn-outline-dark" (click)="onNewAccount()">Add New Account</button>
+    <div class="col">
+      <button class="btn btn-outline-dark" (click)="onNewAccount()">Add New Account</button>
+    </div>
+  </div>
+</div>
+<hr>
+<div class="container">
+  <div class="row mb-4" *ngFor="let acc of accounts; let i=index;">
+    <div class="col">
+      <app-account [account]="acc" [index]="i" ></app-account>
+    </div>
   </div>
 </div>

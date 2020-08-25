@@ -1,3 +1,4 @@
+import { AuthInterceptorService } from './auth/auth-interceptor.service';
 import { PlaceholderDirective } from './shared/placeholder/placeholder.directive';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 import { BrowserModule } from '@angular/platform-browser';
@@ -10,7 +11,7 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { MainComponent } from './main/main.component';
 import { AuthComponent } from './auth/auth.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { SummaryComponent } from './main/summary/summary.component';
 import { AccountsListComponent } from './main/accounts-list/accounts-list.component';
 import { AccountDetailsComponent } from './main/account-details/account-details.component';
@@ -39,7 +40,7 @@ import { AccountEditComponent } from './main/account-edit/account-edit.component
     AppRoutingModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
