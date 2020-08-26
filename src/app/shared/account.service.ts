@@ -31,9 +31,15 @@ export class AccountService {
   }
 
   public addTransaction(accID: number, trans: Transaction): void {
-    console.log(this.accounts, accID);
     this.accounts[accID].transactions.push(trans);
+    if (trans.type === '-') {
+      this.accounts[accID].balance -= trans.amount;
+    }
+    else {
+      this.accounts[accID].balance += trans.amount;
+    }
     this.transactionsChanged.next(this.accounts[accID].transactions);
+    this.accountsChanged.next(this.accounts.slice());
   }
 
   public getTransactions(accID: number): Transaction[] {
