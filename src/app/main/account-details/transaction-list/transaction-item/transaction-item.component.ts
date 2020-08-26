@@ -9,6 +9,7 @@ import { Component, OnInit, Input } from '@angular/core';
 export class TransactionItemComponent implements OnInit {
   @Input()transaction: Transaction;
   @Input()index: number;
+  showDescription = false;
 
   constructor() { }
 

@@ -1,0 +1,18 @@
+.account {
+  color: #3F403F;
+}
+
+.account:hover{
+  text-decoration: none;
+  background: #CED0CE;
+}
+
+.account.active {
+  background-color: #CED0CE;
+  color: #6C0E23;
+}
+
+.account {
+  background-color: #E6E8E6;
+  color: #3F403F;
+}

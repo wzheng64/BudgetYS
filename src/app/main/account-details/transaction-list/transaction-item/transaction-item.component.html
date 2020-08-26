@@ -1,1 +1,19 @@
-<p>transaction-item works!</p>
+<div class="container">
+  <a class="list-group-item rounded account" (click)="showDescription = !showDescription">
+    <div class="row">
+      <div class="col">
+        {{ transaction.name }}
+      </div>
+      <div class="col">
+        {{ transaction.type }}{{ transaction.amount }}
+      </div>
+      <div class="col text-right">
+        On {{ transaction.date }}
+      </div>
+    </div>
+    <div *ngIf="showDescription">
+      <hr>
+      <p>{{ transaction.description }}</p>
+    </div>
+  </a>
+</div>

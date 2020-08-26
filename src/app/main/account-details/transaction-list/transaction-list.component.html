@@ -1,7 +1,14 @@
 <div class="container">
   <div class="row">
+    <div class="col text-center">
+      <h6>Name</h6>
+    </div>
     <div class="col">
-      <app-transaction-item *ngFor="let t of transactions; let i=index" [transaction]="t" [index]="i"></app-transaction-item>
+      <h6>Amount</h6>
+    </div>
+    <div class="col text-center">
+      <h6>Date</h6>
     </div>
   </div>
+  <app-transaction-item *ngFor="let t of transactions; let i=index" [transaction]="t" [index]="i"></app-transaction-item>
 </div>
