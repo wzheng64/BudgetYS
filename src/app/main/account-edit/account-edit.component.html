@@ -3,21 +3,21 @@
     <div class="col">
       <form [formGroup]="accountForm" (ngSubmit)="onSubmit()">
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-5">
             <div class="form-group">
               <label for="name">Name</label>
               <input type="text" id="name" formControlName="name" class="form-control">
             </div>
           </div>
           <div class="col">
-            <label for="type">Type</label>
+            <label for="type">Type:</label>
             <select name="type" id="type" formControlName="type">
               <option *ngFor="let t of getTypes()" [value]="t"> {{ t }}</option>
             </select>
           </div>
         </div>
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-5">
             <div class="form-group">
               <label for="balance">Starting Balance</label>
               <div class="input-group">
@@ -30,8 +30,13 @@
           </div>
         </div>
         <div class="row">
-          <div class="col">
-            <button class="btn btn-outline-dark" type="submit">Create Account</button>
+          <div class="col-md-3">
+            <button class="btn btn-outline-light" type="submit">Create Account</button>
+          </div>
+          <div class="col-md-2">
+            <button class="btn btn-outline-danger float-right">
+              Cancel
+            </button>
           </div>
         </div>
       </form>

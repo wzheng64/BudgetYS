@@ -44,9 +44,9 @@
         </div>
         <div class="row">
           <div class="col">
-            <button class="btn btn-outline-dark" type="submit" [disabled]="!transactionForm.valid">Add Transaction</button>
-            <button class="btn btn-outline-dark" type="button" (click)="onCancel()">Cancel</button>
+            <button class="btn btn-outline-light" type="submit" [disabled]="!transactionForm.valid">Add Transaction</button>
           </div>
+          <button class="btn btn-outline-danger float-right" type="button" (click)="onCancel()">Cancel</button>
         </div>
       </form>
     </div>
