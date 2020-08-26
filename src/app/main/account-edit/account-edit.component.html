@@ -24,17 +24,17 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text" id="basic-addon1">$</span>
                 </div>
-                <input type="number" id="balance" formControlName="balance" class="form-control">
+                <input type="text" id="balance" formControlName="balance" class="form-control">
               </div>
             </div>
           </div>
         </div>
         <div class="row">
           <div class="col-md-3">
-            <button class="btn btn-outline-light" type="submit">Create Account</button>
+            <button class="btn btn-outline-light" type="submit" [disabled]="!accountForm.valid">Create Account</button>
           </div>
           <div class="col-md-2">
-            <button class="btn btn-outline-danger float-right">
+            <button class="btn btn-outline-danger float-right" (click)="onCancel()">
               Cancel
             </button>
           </div>

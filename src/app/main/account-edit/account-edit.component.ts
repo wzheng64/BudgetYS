@@ -23,7 +23,7 @@ export class AccountEditComponent implements OnInit {
       name: new FormControl(null, Validators.required),
       type: new FormControl('CC', Validators.required),
       transactions: new FormControl([]),
-      balance: new FormControl(0, Validators.pattern(/^[0-9]*\.[0-9]{2}$/))
+      balance: new FormControl(0, Validators.pattern(/^((0\.[0-9][1-9])|([1-9][0-9]*(\.[0-9]{2})?)|0|0.00)$/))
     });
     this.route.params.subscribe((params: Params) => {
       this.id = +params.id;
@@ -45,6 +45,10 @@ export class AccountEditComponent implements OnInit {
       }
     }
     return types;
+  }
+
+  onCancel(): void {
+    this.router.navigate(['../'], {relativeTo: this.route});
   }
 
 }
