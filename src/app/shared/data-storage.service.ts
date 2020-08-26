@@ -28,15 +28,21 @@ export class DataStorageService {
       .pipe(
         map(accounts => {
           return accounts.map(acc => {
-            return {
-              ...acc,
-              transactions: acc.transactions ? acc.transactions : []
-            };
+            const transactions = acc.transactions ? acc.transactions : [];
+            return new Account(acc.name, acc.type, transactions, acc.balance);
           });
         }),
         tap(accounts => {
           this.accountService.setAccounts(accounts);
         })
       );
+  }
+
+  updateTransactions(accID: number): void {
+    const acc = this.accountService.getAccount(accID);
+    this.http.put(`https://budgetys-9ff7a.firebaseio.com/users/${ this.authService.user.value.id }/accounts/${accID}.json`, acc)
+      .subscribe(response => {
+      console.log(response);
+    })
   }
 }

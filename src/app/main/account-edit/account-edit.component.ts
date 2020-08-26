@@ -1,10 +1,8 @@
 import { DataStorageService } from './../../shared/data-storage.service';
-import { AuthService } from './../../auth/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AccountType } from '../../shared/enums';
 import { AccountService } from 'src/app/shared/account.service';
-import { Account } from 'src/app/shared/account.model';
 import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({

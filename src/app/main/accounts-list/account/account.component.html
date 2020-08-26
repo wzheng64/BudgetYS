@@ -1,11 +1,12 @@
-<a [routerLink]="[index]" routerLinkActive="active">
-  <div class="card" style="width: 18rem;">
+<div class="card">
+  <a class="account" [routerLink]="[index]" routerLinkActive="active">
     <div class="card-body">
       <h5 class="card-title">{{ account.name }}</h5>
-      <p class="card-text">{{ this.formatType() }}</p>
+      <p class="card-text">{{ account.formatType() }}
     </div>
     <div class="card-footer">
-      $ {{ this.formatBalance() }}
+      $ {{ account.formatBalance() }}
     </div>
-  </div>
-</a>
+  </a>
+    <button class="btn-sm btn-secondary float-right">+</button>
+</div>

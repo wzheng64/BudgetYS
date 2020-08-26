@@ -2,5 +2,18 @@
   <h1 class="text-center">Click on an account for more details</h1>
 </div>
 <div class="container" *ngIf="account">
-  <p>The current account is {{ account.name }}.</p>
+  <h1 class="text-center">{{ account.name }}.</h1>
+  <p class="text-center"><small>A {{ account.formatType() }}</small></p>
+  <hr>
+  <div class="row">
+    <div class="col text-center">
+      <button class="btn btn-outline-dark my-auto" (click)="onNewTransaction()">Add Transaction</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+  <app-transaction-list></app-transaction-list>
 </div>

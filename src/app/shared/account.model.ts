@@ -15,4 +15,17 @@ export class Account {
     this.transactions = transactions;
     this.balance = balance;
   }
+
+  public formatBalance(): string {
+    return this.balance.toFixed(2);
+  }
+
+  public formatType(): string {
+    if (this.type === 'CC') {
+      return 'Credit Card';
+    }
+    else {
+      return `${this.type} Account`;
+    }
+  }
 }

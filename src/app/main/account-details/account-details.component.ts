@@ -1,3 +1,4 @@
+import { Transaction } from './../../shared/transaction.model';
 import { AccountService } from 'src/app/shared/account.service';
 import { Account } from './../../shared/account.model';
 import { Component, OnInit } from '@angular/core';
@@ -19,6 +20,10 @@ export class AccountDetailsComponent implements OnInit {
       this.index = +params.id;
       this.account = this.accountService.getAccount(this.index);
     });
+  }
+
+  onNewTransaction(): void {
+    this.router.navigate(['new'], {relativeTo: this.route});
   }
 
 }

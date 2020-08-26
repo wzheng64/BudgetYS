@@ -14,17 +14,4 @@ export class AccountComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
-  public formatType(): string {
-    if (this.account.type === 'CC') {
-      return 'Credit Card';
-    }
-    else {
-      return `${this.account.type} Account`;
-    }
-  }
-
-  public formatBalance(): string {
-    return this.account.balance.toFixed(2);
-  }
 }

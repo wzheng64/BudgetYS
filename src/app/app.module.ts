@@ -18,6 +18,9 @@ import { AccountDetailsComponent } from './main/account-details/account-details.
 import { AccountComponent } from './main/accounts-list/account/account.component';
 import { BudgetingComponent } from './budgeting/budgeting.component';
 import { AccountEditComponent } from './main/account-edit/account-edit.component';
+import { TransactionNewComponent } from './main/account-details/transaction-new/transaction-new.component';
+import { TransactionListComponent } from './main/account-details/transaction-list/transaction-list.component';
+import { TransactionItemComponent } from './main/account-details/transaction-list/transaction-item/transaction-item.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +35,10 @@ import { AccountEditComponent } from './main/account-edit/account-edit.component
     HeaderComponent,
     AccountComponent,
     BudgetingComponent,
-    AccountEditComponent
+    AccountEditComponent,
+    TransactionNewComponent,
+    TransactionListComponent,
+    TransactionItemComponent
   ],
   imports: [
     BrowserModule,

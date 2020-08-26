@@ -20,7 +20,12 @@
           <div class="col-md-4">
             <div class="form-group">
               <label for="balance">Starting Balance</label>
-              <span>$</span><input type="number" id="balance" formControlName="balance" class="form-control">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1">$</span>
+                </div>
+                <input type="number" id="balance" formControlName="balance" class="form-control">
+              </div>
             </div>
           </div>
         </div>

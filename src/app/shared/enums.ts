@@ -5,6 +5,6 @@ export enum AccountType {
 }
 
 export enum transactionType {
-  Plus,
-  Minus
+  Plus= '+',
+  Minus= '-'
 }
