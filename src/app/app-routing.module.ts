@@ -23,7 +23,8 @@ const appRoutes: Routes = [
     { path: '', component: AccountDetailsComponent },
     { path: 'new', component: AccountEditComponent },
     { path: ':id', component: AccountDetailsComponent, canActivate: [AccountGuard], children: [
-      { path: 'new', component: TransactionNewComponent }
+      { path: 'new', component: TransactionNewComponent },
+      { path: 'edit', component: AccountEditComponent }
     ] }
   ] },
   { path: 'budgeting', component: BudgetingComponent, canActivate: [AuthGuard]},

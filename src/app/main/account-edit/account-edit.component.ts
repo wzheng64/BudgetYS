@@ -19,24 +19,25 @@ export class AccountEditComponent implements OnInit {
               private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.accountForm = new FormGroup({
-      name: new FormControl(null, Validators.required),
-      type: new FormControl('CC', Validators.required),
-      transactions: new FormControl([]),
-      balance: new FormControl(0, [Validators.required,
-        Validators.pattern(/^((0\.[0-9][1-9])|([1-9][0-9]*(\.[0-9]{2})?)|0|0.00)$/), Validators.min(0)])
-    });
     this.route.params.subscribe((params: Params) => {
       this.id = +params.id;
       this.editMode = params.id != null;
     });
+    this.initForm();
   }
 
   onSubmit(): void {
     this.accountForm.value.balance = Number(this.accountForm.value.balance);
-    this.accountService.addAccount(this.accountForm.value);
-    this.db.storeAccounts();
-    this.router.navigate(['/main']);
+    if (this.editMode) {
+      this.accountService.modifyAccount(this.accountForm.value, this.id);
+      this.db.storeAccounts();
+      this.router.navigate(['../'], {relativeTo: this.route});
+    }
+    else {
+      this.accountService.addAccount(this.accountForm.value);
+      this.db.storeAccounts();
+      this.router.navigate(['/main']);
+    }
   }
 
   public getTypes(): string[] {
@@ -53,4 +54,25 @@ export class AccountEditComponent implements OnInit {
     this.router.navigate(['../'], {relativeTo: this.route});
   }
 
+  private initForm(): void {
+    if (this.editMode) {
+      const acc = this.accountService.getAccount(this.id);
+      this.accountForm = new FormGroup({
+        name: new FormControl(acc.name, Validators.required),
+        type: new FormControl(acc.type, Validators.required),
+        transactions: new FormControl(acc.transactions),
+        balance: new FormControl(acc.balance, [Validators.required,
+          Validators.pattern(/^((0\.[0-9][1-9])|([1-9][0-9]*(\.[0-9]{2})?)|0|0.00)$/), Validators.min(0)])
+      });
+    }
+    else {
+      this.accountForm = new FormGroup({
+        name: new FormControl(null, Validators.required),
+        type: new FormControl('CC', Validators.required),
+        transactions: new FormControl([]),
+        balance: new FormControl(0, [Validators.required,
+          Validators.pattern(/^((0\.[0-9][1-9])|([1-9][0-9]*(\.[0-9]{2})?)|0|0.00)$/), Validators.min(0)])
+      });
+    }
+  }
 }

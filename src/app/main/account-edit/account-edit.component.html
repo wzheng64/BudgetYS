@@ -20,7 +20,7 @@
         <div class="row">
           <div class="col-md-5">
             <div class="form-group">
-              <label for="balance">Starting Balance</label>
+              <label for="balance">{{ editMode ? 'Balance' : 'Starting Balance'}}</label>
               <div class="input-group">
                 <div class="input-group-prepend">
                   <span class="input-group-text" id="basic-addon1">$</span>
@@ -33,7 +33,7 @@
         </div>
         <div class="row">
           <div class="col-md-3">
-            <button class="btn btn-outline-light" type="submit" [disabled]="!accountForm.valid">Create Account</button>
+            <button class="btn btn-outline-light" type="submit" [disabled]="!accountForm.valid">{{ editMode ? 'Change' : 'Create Account'}}</button>
           </div>
           <div class="col-md-2">
             <button class="btn btn-outline-danger float-right" (click)="onCancel()">

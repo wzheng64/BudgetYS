@@ -32,4 +32,58 @@
       </div>
     </div>
   </a>
+  <hr>
+  <div class="row" *ngIf="editMode">
+    <div class="col">
+      <form [formGroup]="transactionForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" formControlName="name" class="form-control">
+            </div>
+            <span *ngIf="!transactionForm.get('name').valid && transactionForm.get('name').touched">A name is required!</span>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="date">Date</label>
+              <input type="date" id="date" formControlName="date" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="form-group">
+              <label for="description">Description (optional)</label>
+              <textarea type="text" id="description" formControlName="description" class="form-control"
+                rows="3"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="amount">Amount</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <select name="type" id="type" formControlName="type">
+                    <option *ngFor="let t of ['-', '+']" [value]="t">{{ t }}</option>
+                  </select>
+                  <span class="input-group-text" id="basic-addon1">$</span>
+                </div>
+                <input type="text" id="amount" formControlName="amount" class="form-control">
+              </div>
+              <span *ngIf="!transactionForm.get('amount').valid && transactionForm.get('amount').touched">Please enter a valid amount.</span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <button class="btn btn-outline-light" type="submit" [disabled]="!transactionForm.valid">Confirm</button>
+          </div>
+          <button class="btn btn-outline-danger float-right" type="button" (click)="onCancel()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>

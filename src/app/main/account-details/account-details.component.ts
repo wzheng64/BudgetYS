@@ -29,6 +29,10 @@ export class AccountDetailsComponent implements OnInit {
     this.router.navigate(['new'], {relativeTo: this.route});
   }
 
+  onEdit(): void {
+    this.router.navigate(['edit'], {relativeTo: this.route});
+  }
+
   onDelete(): void {
     this.delete = false;
     this.accountService.deleteAccount(this.index);
