@@ -21,7 +21,8 @@ export class AccountService {
   }
 
   public addAccount(acc: Account): void {
-    this.accounts.push(acc);
+    const realAcc = new Account(acc.name, acc.type, acc.transactions, acc.balance);
+    this.accounts.push(realAcc);
     this.accountsChanged.next(this.accounts.slice());
   }
 
@@ -38,11 +39,25 @@ export class AccountService {
     else {
       this.accounts[accID].balance += trans.amount;
     }
-    this.transactionsChanged.next(this.accounts[accID].transactions);
+    this.transactionsChanged.next(this.accounts[accID].transactions.slice());
     this.accountsChanged.next(this.accounts.slice());
   }
 
   public getTransactions(accID: number): Transaction[] {
     return this.accounts[accID].transactions.slice();
+  }
+
+  public deleteTransaction(accID: number, tID: number): void {
+    const t = this.accounts[accID].transactions[tID];
+    if (t.type === '-') {
+      this.accounts[accID].balance += t.amount;
+    }
+    else {
+      this.accounts[accID].balance -= t.amount;
+    }
+    this.accounts[accID].transactions.splice(tID, 1);
+    console.log(this.accounts[accID].transactions);
+    this.transactionsChanged.next(this.accounts[accID].transactions.slice());
+    this.accountsChanged.next(this.accounts.slice());
   }
 }

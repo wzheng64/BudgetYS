@@ -33,6 +33,7 @@ export class AccountEditComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.accountForm.value.balance = Number(this.accountForm.value.balance);
     this.accountService.addAccount(this.accountForm.value);
     this.db.storeAccounts();
     this.router.navigate(['/main']);

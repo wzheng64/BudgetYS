@@ -27,10 +27,15 @@ export class DataStorageService {
     )
       .pipe(
         map(accounts => {
-          return accounts.map(acc => {
-            const transactions = acc.transactions ? acc.transactions : [];
-            return new Account(acc.name, acc.type, transactions, acc.balance);
-          });
+          if (accounts) {
+            return accounts.map(acc => {
+              const transactions = acc.transactions ? acc.transactions : [];
+              return new Account(acc.name, acc.type, transactions, acc.balance);
+            });
+          }
+          else {
+            return [];
+          }
         }),
         tap(accounts => {
           this.accountService.setAccounts(accounts);
@@ -43,6 +48,6 @@ export class DataStorageService {
     this.http.put(`https://budgetys-9ff7a.firebaseio.com/users/${ this.authService.user.value.id }/accounts/${accID}.json`, acc)
       .subscribe(response => {
       console.log(response);
-    })
+    });
   }
 }

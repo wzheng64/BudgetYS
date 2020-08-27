@@ -27,7 +27,7 @@ export class TransactionNewComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log(this.route.snapshot.paramMap);
+    this.transactionForm.value.amount = Number(this.transactionForm.value.amount);
     const accID = +this.route.snapshot.params.id;
     this.accountService.addTransaction(accID, this.transactionForm.value);
     this.db.updateTransactions(accID);
