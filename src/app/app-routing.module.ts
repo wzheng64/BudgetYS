@@ -5,6 +5,7 @@ import { Routes, RouterModule, ExtraOptions } from '@angular/router';
 
 import { AuthGuard } from './auth/auth.guard';
 import { AuthRedirectGuard } from './auth/auth-redirect.guard';
+import { AccountGuard } from './main/account-details/account.guard';
 
 import { MainComponent } from './main/main.component';
 import { AuthComponent } from './auth/auth.component';
@@ -21,7 +22,7 @@ const appRoutes: Routes = [
   { path: 'main', component: MainComponent, canActivate: [AuthGuard], resolve: [AccountResolverService], children: [
     { path: '', component: AccountDetailsComponent },
     { path: 'new', component: AccountEditComponent },
-    { path: ':id', component: AccountDetailsComponent, children: [
+    { path: ':id', component: AccountDetailsComponent, canActivate: [AccountGuard], children: [
       { path: 'new', component: TransactionNewComponent }
     ] }
   ] },

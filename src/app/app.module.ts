@@ -21,6 +21,7 @@ import { AccountEditComponent } from './main/account-edit/account-edit.component
 import { TransactionNewComponent } from './main/account-details/transaction-new/transaction-new.component';
 import { TransactionListComponent } from './main/account-details/transaction-list/transaction-list.component';
 import { TransactionItemComponent } from './main/account-details/transaction-list/transaction-item/transaction-item.component';
+import { AlertComponent } from './shared/alert/alert.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { TransactionItemComponent } from './main/account-details/transaction-lis
     AccountEditComponent,
     TransactionNewComponent,
     TransactionListComponent,
-    TransactionItemComponent
+    TransactionItemComponent,
+    AlertComponent
   ],
   imports: [
     BrowserModule,

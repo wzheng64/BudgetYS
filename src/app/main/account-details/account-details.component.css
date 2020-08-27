@@ -1,3 +1,8 @@
 .container {
   color: #E6E8E6;
 }
+
+.buttons {
+  top: 0%;
+  right: 3vw;
+}

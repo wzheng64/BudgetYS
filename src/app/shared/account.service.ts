@@ -26,6 +26,11 @@ export class AccountService {
     this.accountsChanged.next(this.accounts.slice());
   }
 
+  public deleteAccount(accID: number): void {
+    this.accounts.splice(accID, 1);
+    this.accountsChanged.next(this.accounts.slice());
+  }
+
   public setAccounts(accounts: Account[]): void {
     this.accounts = accounts;
     this.accountsChanged.next(this.accounts.slice());
@@ -56,7 +61,6 @@ export class AccountService {
       this.accounts[accID].balance -= t.amount;
     }
     this.accounts[accID].transactions.splice(tID, 1);
-    console.log(this.accounts[accID].transactions);
     this.transactionsChanged.next(this.accounts[accID].transactions.slice());
     this.accountsChanged.next(this.accounts.slice());
   }
