@@ -55,6 +55,18 @@ export class AccountService {
     this.accountsChanged.next(this.accounts.slice());
   }
 
+  public setMain(id: string): void {
+    this.accounts.forEach((acc, i) => {
+      if (acc.id === id) {
+        this.mainAccount = id;
+      }
+    });
+  }
+
+  public getMain(): Account {
+    return this.getAccountById(this.mainAccount);
+  }
+
   public addTransaction(accID: number, trans: Transaction): void {
     const realTrans = new Transaction(trans.name, trans.date, trans.description, trans.amount, trans.type, this.idService.generateTrans());
     this.accounts[accID].transactions.push(realTrans);

@@ -14,6 +14,7 @@ export class AccountEditComponent implements OnInit {
   id: number;
   accountForm: FormGroup;
   editMode = false;
+  isMain = false;
 
   constructor(private db: DataStorageService, private accountService: AccountService,
               private router: Router, private route: ActivatedRoute) { }
