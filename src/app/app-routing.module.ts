@@ -22,7 +22,7 @@ const appRoutes: Routes = [
   { path: 'main', component: MainComponent, canActivate: [AuthGuard], resolve: [AccountResolverService], children: [
     { path: '', component: AccountDetailsComponent },
     { path: 'new', component: AccountEditComponent },
-    { path: ':id', component: AccountDetailsComponent, canActivate: [AccountGuard], children: [
+    { path: ':id', component: AccountDetailsComponent, children: [
       { path: 'new', component: TransactionNewComponent },
       { path: 'edit', component: AccountEditComponent }
     ] }
