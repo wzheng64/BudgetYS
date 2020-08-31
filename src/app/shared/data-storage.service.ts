@@ -16,16 +16,10 @@ export class DataStorageService {
 
   }
 
-  // storeAccounts(): void {
-  //   const accounts = {accounts: this.accountService.getAccounts()};
-  //   this.http.put(`https://budgetys-9ff7a.firebaseio.com/users/${ this.authService.user.value.id }.json`, accounts).subscribe(response => {
-  //     console.log(response);
-  //   });
-  // }
-
   storeAccounts(): void {
     const accounts = this.accountService.getAccounts();
-    this.http.put(`https://budgetys-9ff7a.firebaseio.com/users/${ this.authService.user.value.id }/accounts.json`, accounts).subscribe(response => {
+    this.http.put(`https://budgetys-9ff7a.firebaseio.com/users/${ this.authService.user.value.id }/accounts.json`, accounts)
+    .subscribe(response => {
       console.log(response);
     });
   }
@@ -54,7 +48,7 @@ export class DataStorageService {
   }
 
   updateTransactions(accID: number): void {
-    const acc = this.accountService.getAccount(accID);
+    const acc = this.accountService.getAccountByIndex(accID);
     this.http.put(`https://budgetys-9ff7a.firebaseio.com/users/${ this.authService.user.value.id }/accounts/${accID}.json`, acc)
       .subscribe(response => {
       console.log(response);

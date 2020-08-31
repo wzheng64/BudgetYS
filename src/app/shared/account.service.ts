@@ -12,13 +12,23 @@ export class AccountService {
   constructor(private idService: IdService){}
 
   private accounts: Account[] = [];
+  private mainAccount: string;
 
   public getAccounts(): Account[] {
     return this.accounts.slice();
   }
 
-  public getAccount(id: number): Account {
-    return this.accounts.slice()[id];
+  public getAccountByIndex(index: number): Account {
+    return this.accounts.slice()[index];
+  }
+
+  public getAccountById(id: string): Account {
+    this.accounts.forEach((acc, i) => {
+      if (acc.id === id) {
+        return this.accounts.slice()[i];
+      }
+    })
+    return null;
   }
 
   public addAccount(acc: Account): void {

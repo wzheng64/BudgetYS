@@ -56,7 +56,7 @@ export class AccountEditComponent implements OnInit {
 
   private initForm(): void {
     if (this.editMode) {
-      const acc = this.accountService.getAccount(this.id);
+      const acc = this.accountService.getAccountByIndex(this.id);
       this.accountForm = new FormGroup({
         name: new FormControl(acc.name, Validators.required),
         type: new FormControl(acc.type, Validators.required),

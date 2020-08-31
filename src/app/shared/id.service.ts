@@ -48,7 +48,6 @@ export class IdService {
         });
       }
     });
-    console.log(this.accs);
   }
 
   public deleteAcc(id: string): void {
