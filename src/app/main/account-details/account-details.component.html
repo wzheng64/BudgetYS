@@ -26,7 +26,7 @@
   </div>
   <h1 class="text-center">{{ account.name }}</h1>
   <p class="text-center"><small>A {{ account.formatType() }}</small></p>
-  <p class="text-center">{{ account.type  }}</p>
+  <p class="text-center">{{ account.type === 'CC'? 'You owe:' : 'You have:' }}</p>
   <h3 class="text-center">$ {{ account.formatBalance() }}</h3>
   <hr>
   <div class="row">
