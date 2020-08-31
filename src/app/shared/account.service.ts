@@ -27,7 +27,7 @@ export class AccountService {
       if (acc.id === id) {
         return this.accounts.slice()[i];
       }
-    })
+    });
     return null;
   }
 
@@ -58,11 +58,21 @@ export class AccountService {
   public addTransaction(accID: number, trans: Transaction): void {
     const realTrans = new Transaction(trans.name, trans.date, trans.description, trans.amount, trans.type, this.idService.generateTrans());
     this.accounts[accID].transactions.push(realTrans);
-    if (trans.type === '-') {
-      this.accounts[accID].balance -= trans.amount;
+    if (this.accounts[accID].type === 'CC') {
+      if (trans.type === '-') {
+        this.accounts[accID].balance += trans.amount;
+      }
+      else {
+        this.accounts[accID].balance -= trans.amount;
+      }
     }
     else {
-      this.accounts[accID].balance += trans.amount;
+      if (trans.type === '-') {
+        this.accounts[accID].balance -= trans.amount;
+      }
+      else {
+        this.accounts[accID].balance += trans.amount;
+      }
     }
     this.transactionsChanged.next(this.accounts[accID].transactions.slice());
     this.accountsChanged.next(this.accounts.slice());
@@ -70,22 +80,42 @@ export class AccountService {
 
   public updateTransaction(accID: number, trans: Transaction, tID: number): void {
     const oldT = this.accounts[accID].transactions[tID];
-    if (oldT.type === '-') {
-      this.accounts[accID].balance += oldT.amount;
+    if (this.accounts[accID].type === 'CC') {
+      if (oldT.type === '-') {
+        this.accounts[accID].balance -= oldT.amount;
+      }
+      else {
+        this.accounts[accID].balance += oldT.amount;
+      }
     }
     else {
-      this.accounts[accID].balance -= oldT.amount;
+      if (oldT.type === '-') {
+        this.accounts[accID].balance += oldT.amount;
+      }
+      else {
+        this.accounts[accID].balance -= oldT.amount;
+      }
     }
     this.accounts[accID].transactions[tID].amount = trans.amount;
     this.accounts[accID].transactions[tID].date = trans.date;
     this.accounts[accID].transactions[tID].description = trans.description;
     this.accounts[accID].transactions[tID].name = trans.name;
     this.accounts[accID].transactions[tID].type = trans.type;
-    if (trans.type === '-') {
-      this.accounts[accID].balance -= trans.amount;
+    if (this.accounts[accID].type === 'CC') {
+      if (trans.type === '-') {
+        this.accounts[accID].balance += trans.amount;
+      }
+      else {
+        this.accounts[accID].balance -= trans.amount;
+      }
     }
     else {
-      this.accounts[accID].balance += trans.amount;
+      if (trans.type === '-') {
+        this.accounts[accID].balance -= trans.amount;
+      }
+      else {
+        this.accounts[accID].balance += trans.amount;
+      }
     }
     this.transactionsChanged.next(this.accounts[accID].transactions.slice());
     this.accountsChanged.next(this.accounts.slice());
@@ -96,16 +126,26 @@ export class AccountService {
   }
 
   public deleteTransaction(accID: number, tID: number): void {
-    const t = this.accounts[accID].transactions[tID];
-    if (t.type === '-') {
-      this.accounts[accID].balance += t.amount;
+    const trans = this.accounts[accID].transactions[tID];
+    if (this.accounts[accID].type === 'CC') {
+      if (trans.type === '-') {
+        this.accounts[accID].balance -= trans.amount;
+      }
+      else {
+        this.accounts[accID].balance += trans.amount;
+      }
     }
     else {
-      this.accounts[accID].balance -= t.amount;
+      if (trans.type === '-') {
+        this.accounts[accID].balance += trans.amount;
+      }
+      else {
+        this.accounts[accID].balance -= trans.amount;
+      }
     }
     this.accounts[accID].transactions.splice(tID, 1);
     this.transactionsChanged.next(this.accounts[accID].transactions.slice());
     this.accountsChanged.next(this.accounts.slice());
-    this.idService.deleteTrans(t.id);
+    this.idService.deleteTrans(trans.id);
   }
 }
