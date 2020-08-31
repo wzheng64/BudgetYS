@@ -1,1 +1,7 @@
-<p>summary works!</p>
+<div class="container">
+  <div class="row">
+    <div class="card">
+      <h2 [ngClass]="{'positive': total>0, 'negative': total<0}"> Total: ${{ total }} </h2>
+    </div>
+  </div>
+</div>
