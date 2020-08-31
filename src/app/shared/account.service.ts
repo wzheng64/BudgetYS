@@ -1,3 +1,4 @@
+import { IdService } from './id.service';
 import { Transaction } from './transaction.model';
 import { Account } from './account.model';
 import { Injectable } from '@angular/core';
@@ -8,7 +9,7 @@ export class AccountService {
   accountsChanged = new Subject<Account[]>();
   transactionsChanged = new Subject<Transaction[]>();
 
-  constructor(){}
+  constructor(private idService: IdService){}
 
   private accounts: Account[] = [];
 
@@ -21,7 +22,7 @@ export class AccountService {
   }
 
   public addAccount(acc: Account): void {
-    const realAcc = new Account(acc.name, acc.type, acc.transactions, acc.balance);
+    const realAcc = new Account(acc.name, acc.type, acc.transactions, acc.balance, this.idService.generateAcc());
     this.accounts.push(realAcc);
     this.accountsChanged.next(this.accounts.slice());
   }
@@ -34,6 +35,7 @@ export class AccountService {
   }
 
   public deleteAccount(accID: number): void {
+    this.idService.deleteAcc(this.accounts[accID].id);
     this.accounts.splice(accID, 1);
     this.accountsChanged.next(this.accounts.slice());
   }
@@ -44,7 +46,8 @@ export class AccountService {
   }
 
   public addTransaction(accID: number, trans: Transaction): void {
-    this.accounts[accID].transactions.push(trans);
+    const realTrans = new Transaction(trans.name, trans.date, trans.description, trans.amount, trans.type, this.idService.generateTrans());
+    this.accounts[accID].transactions.push(realTrans);
     if (trans.type === '-') {
       this.accounts[accID].balance -= trans.amount;
     }
@@ -56,7 +59,6 @@ export class AccountService {
   }
 
   public updateTransaction(accID: number, trans: Transaction, tID: number): void {
-    const oldAcc = this.accounts[accID];
     const oldT = this.accounts[accID].transactions[tID];
     if (oldT.type === '-') {
       this.accounts[accID].balance += oldT.amount;
@@ -94,5 +96,6 @@ export class AccountService {
     this.accounts[accID].transactions.splice(tID, 1);
     this.transactionsChanged.next(this.accounts[accID].transactions.slice());
     this.accountsChanged.next(this.accounts.slice());
+    this.idService.deleteTrans(t.id);
   }
 }

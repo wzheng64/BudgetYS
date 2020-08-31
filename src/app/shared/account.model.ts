@@ -8,12 +8,14 @@ export class Account {
   // This will either be the amount of money in the account
   // or for credit cards, will be the current amount owed
   public balance: number;
+  public id: string;
 
-  constructor(name: string, type: AccountType, transactions: Transaction[], balance: number) {
+  constructor(name: string, type: AccountType, transactions: Transaction[], balance: number, id: string) {
     this.name = name;
     this.type = type;
     this.transactions = transactions;
     this.balance = balance;
+    this.id = id;
   }
 
   public formatBalance(): string {

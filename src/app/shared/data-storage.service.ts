@@ -1,3 +1,4 @@
+import { IdService } from './id.service';
 import { AuthService } from './../auth/auth.service';
 
 import { Injectable } from '@angular/core';
@@ -10,13 +11,21 @@ import { Account } from './account.model';
 
 @Injectable({ providedIn: 'root' })
 export class DataStorageService {
-  constructor(private http: HttpClient, private accountService: AccountService, private authService: AuthService) {
+  constructor(private http: HttpClient, private accountService: AccountService,
+              private authService: AuthService, private idService: IdService) {
 
   }
 
+  // storeAccounts(): void {
+  //   const accounts = {accounts: this.accountService.getAccounts()};
+  //   this.http.put(`https://budgetys-9ff7a.firebaseio.com/users/${ this.authService.user.value.id }.json`, accounts).subscribe(response => {
+  //     console.log(response);
+  //   });
+  // }
+
   storeAccounts(): void {
-    const accounts = {accounts: this.accountService.getAccounts()};
-    this.http.put(`https://budgetys-9ff7a.firebaseio.com/users/${ this.authService.user.value.id }.json`, accounts).subscribe(response => {
+    const accounts = this.accountService.getAccounts();
+    this.http.put(`https://budgetys-9ff7a.firebaseio.com/users/${ this.authService.user.value.id }/accounts.json`, accounts).subscribe(response => {
       console.log(response);
     });
   }
@@ -30,7 +39,7 @@ export class DataStorageService {
           if (accounts) {
             return accounts.map(acc => {
               const transactions = acc.transactions ? acc.transactions : [];
-              return new Account(acc.name, acc.type, transactions, acc.balance);
+              return new Account(acc.name, acc.type, transactions, acc.balance, acc.id);
             });
           }
           else {
@@ -39,6 +48,7 @@ export class DataStorageService {
         }),
         tap(accounts => {
           this.accountService.setAccounts(accounts);
+          this.idService.setKnownIds(accounts);
         })
       );
   }
