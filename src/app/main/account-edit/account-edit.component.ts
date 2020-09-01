@@ -1,3 +1,4 @@
+import { IdService } from './../../shared/id.service';
 import { DataStorageService } from './../../shared/data-storage.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -17,7 +18,7 @@ export class AccountEditComponent implements OnInit {
   isMain = false;
 
   constructor(private db: DataStorageService, private accountService: AccountService,
-              private router: Router, private route: ActivatedRoute) { }
+              private router: Router, private route: ActivatedRoute, private idService: IdService) { }
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
@@ -73,16 +74,19 @@ export class AccountEditComponent implements OnInit {
         type: new FormControl(acc.type, Validators.required),
         transactions: new FormControl(acc.transactions),
         balance: new FormControl(acc.balance, [Validators.required,
-          Validators.pattern(/^((0\.[0-9][1-9])|([1-9][0-9]*(\.[0-9]{2})?)|0|0.00)$/), Validators.min(0)])
+          Validators.pattern(/^((0\.[0-9][1-9])|([1-9][0-9]*(\.[0-9]{2})?)|0|0.00)$/), Validators.min(0)]),
+        id: new FormControl(this.id)
       });
     }
     else {
+      this.id = this.idService.generateAcc();
       this.accountForm = new FormGroup({
         name: new FormControl(null, Validators.required),
         type: new FormControl('CC', Validators.required),
         transactions: new FormControl([]),
         balance: new FormControl(0, [Validators.required,
-          Validators.pattern(/^((0\.[0-9][1-9])|([1-9][0-9]*(\.[0-9]{2})?)|0|0.00)$/), Validators.min(0)])
+          Validators.pattern(/^((0\.[0-9][1-9])|([1-9][0-9]*(\.[0-9]{2})?)|0|0.00)$/), Validators.min(0)]),
+          id: new FormControl(this.id)
       });
     }
     if (this.accountService.getMain() && this.accountService.getMain().id === this.id) {

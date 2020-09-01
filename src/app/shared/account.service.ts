@@ -28,9 +28,8 @@ export class AccountService {
   }
 
   public addAccount(acc: Account): void {
-    const id = this.idService.generateAcc();
-    const realAcc = new Account(acc.name, acc.type, acc.transactions, acc.balance, id);
-    this.accounts[id] = realAcc;
+    const realAcc = new Account(acc.name, acc.type, acc.transactions, acc.balance, acc.id);
+    this.accounts[acc.id] = realAcc;
     this.accountsChanged.next({...this.accounts});
   }
 

@@ -35,6 +35,10 @@ export class AccountDetailsComponent implements OnInit {
 
   onDelete(): void {
     this.delete = false;
+    if (this.accountService.getMain() && this.accountService.getMain().id === this.index) {
+      this.accountService.setMain('');
+      this.db.updateMain('');
+    }
     this.accountService.deleteAccount(this.index);
     this.router.navigate(['../'], {relativeTo: this.route});
     this.db.storeAccounts();
