@@ -1,5 +1,4 @@
 import { AccountResolverService } from './shared/account-resolver.service';
-import { BudgetingComponent } from './budgeting/budgeting.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, ExtraOptions } from '@angular/router';
 
@@ -11,6 +10,7 @@ import { AuthComponent } from './auth/auth.component';
 import { AccountEditComponent } from './main/account-edit/account-edit.component';
 import { AccountDetailsComponent } from './main/account-details/account-details.component';
 import { TransactionNewComponent } from './main/account-details/transaction-new/transaction-new.component';
+import { BudgetComponent } from './budget/budget.component';
 
 const routingConfig: ExtraOptions = {
   paramsInheritanceStrategy: 'always'
@@ -26,7 +26,7 @@ const appRoutes: Routes = [
       { path: 'edit', component: AccountEditComponent }
     ] }
   ] },
-  { path: 'budgeting', component: BudgetingComponent, canActivate: [AuthGuard]},
+  { path: 'budgeting', component: BudgetComponent, canActivate: [AuthGuard]},
   { path: 'auth', component: AuthComponent, canActivate: [AuthRedirectGuard] }
 ];
 

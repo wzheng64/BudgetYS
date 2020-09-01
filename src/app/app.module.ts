@@ -16,12 +16,13 @@ import { SummaryComponent } from './main/summary/summary.component';
 import { AccountsListComponent } from './main/accounts-list/accounts-list.component';
 import { AccountDetailsComponent } from './main/account-details/account-details.component';
 import { AccountComponent } from './main/accounts-list/account/account.component';
-import { BudgetingComponent } from './budgeting/budgeting.component';
 import { AccountEditComponent } from './main/account-edit/account-edit.component';
 import { TransactionNewComponent } from './main/account-details/transaction-new/transaction-new.component';
 import { TransactionListComponent } from './main/account-details/transaction-list/transaction-list.component';
 import { TransactionItemComponent } from './main/account-details/transaction-list/transaction-item/transaction-item.component';
 import { AlertComponent } from './shared/alert/alert.component';
+import { IncomeDisplayComponent } from './main/income-display/income-display.component';
+import { BudgetComponent } from './budget/budget.component';
 
 @NgModule({
   declarations: [
@@ -35,12 +36,13 @@ import { AlertComponent } from './shared/alert/alert.component';
     AccountDetailsComponent,
     HeaderComponent,
     AccountComponent,
-    BudgetingComponent,
     AccountEditComponent,
     TransactionNewComponent,
     TransactionListComponent,
     TransactionItemComponent,
-    AlertComponent
+    AlertComponent,
+    IncomeDisplayComponent,
+    BudgetComponent
   ],
   imports: [
     BrowserModule,

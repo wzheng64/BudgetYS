@@ -8,6 +8,12 @@
     <div class="card">
       <h1>Main Account:</h1>
       <h3 *ngIf="main">{{ main.name }} </h3>
+      <h3 *ngIf="main">
+        {{ main.type === 'CC' ? 'You owe:' : 'You have:'}}
+        <h4 *ngIf="main" [ngClass]="{'positive': main.balance>0, 'negative': main.balance<0}">
+          $ {{ main.formatBalance() }}
+        </h4>
+      </h3>
     </div>
   </div>
 </div>

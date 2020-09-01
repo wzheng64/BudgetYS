@@ -1,10 +1,15 @@
 <div class="container-fluid">
   <div class="row vh-100">
     <div class="col">
-      <div class="row h-25" style="border: 3px solid #515251; background-color: #3F403F;">
-        <app-summary></app-summary>
+      <div class="row" style="border: 3px solid #515251; background-color: #3F403F;">
+        <div class="col">
+          <app-summary></app-summary>
+        </div>
+        <div class="col">
+          <p>This will be the weekly income section!</p>
+        </div>
       </div>
-      <div class="row h-75 overflow-auto" style="border: 3px solid #515251; background-color: #3F403F;">
+      <div class="row vh-100 overflow-auto" style="border: 3px solid #515251; background-color: #3F403F;">
         <app-accounts-list></app-accounts-list>
       </div>
     </div>
