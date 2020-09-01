@@ -11,15 +11,29 @@ import { Account } from '../../shared/account.model';
 })
 export class AccountsListComponent implements OnInit, OnDestroy {
   accSub: Subscription;
-  accounts: Account[] = [];
+  accounts: { [s: string]: Account; } = {};
+  accountList: Account[] = [];
 
   constructor(private router: Router, private route: ActivatedRoute, private accountService: AccountService) { }
 
   ngOnInit(): void {
-    this.accSub = this.accountService.accountsChanged.subscribe((accs: Account[]) => {
+    this.accSub = this.accountService.accountsChanged.subscribe((accs: { [s: string]: Account; }) => {
       this.accounts = accs;
+      this.accountList = [];
+      for (const id in this.accounts) {
+        if (Object.prototype.hasOwnProperty.call(this.accounts, id)) {
+          this.accountList.push(this.accounts[id]);
+        }
+      }
+      this.accountList.sort((a, b) => (a.name > b.name) ? -1 : 1);
     });
     this.accounts = this.accountService.getAccounts();
+    for (const id in this.accounts) {
+      if (Object.prototype.hasOwnProperty.call(this.accounts, id)) {
+        this.accountList.push(this.accounts[id]);
+      }
+    }
+    this.accountList.sort((a, b) => (a.name > b.name) ? -1 : 1);
   }
 
   onNewAccount(): void {

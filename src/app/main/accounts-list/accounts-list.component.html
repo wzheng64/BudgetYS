@@ -7,9 +7,9 @@
 </div>
 <hr>
 <div class="container">
-  <div class="row mb-4" *ngFor="let acc of accounts; let i=index;">
+  <div class="row mb-4" *ngFor="let acc of this.accountList; let i=index;">
     <div class="col-12">
-      <app-account [account]="acc" [index]="i" ></app-account>
+      <app-account [account]="acc" [id]="acc.id" ></app-account>
     </div>
   </div>
 </div>

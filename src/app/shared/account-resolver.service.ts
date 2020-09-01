@@ -7,13 +7,14 @@ import { Account } from './account.model';
 import { DataStorageService } from './data-storage.service';
 
 @Injectable({providedIn: 'root'})
-export class AccountResolverService implements Resolve<Account[]>{
+export class AccountResolverService implements Resolve<{ [s: string]: Account; }>{
   constructor(private data: DataStorageService, private accountService: AccountService){}
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Account[] | Observable<Account[]> | Promise<Account[]> {
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot):
+  { [s: string]: Account; } | Observable<{ [s: string]: Account; }> | Promise<{ [s: string]: Account; }> {
     const accs = this.accountService.getAccounts();
 
-    if (accs.length === 0) {
+    if (Object.keys(accs).length === 0) {
       return this.data.fetchAccounts();
     }
     else {

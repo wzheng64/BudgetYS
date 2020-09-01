@@ -35,14 +35,14 @@ export class TransactionItemComponent implements OnInit {
   }
 
   onDelete(): void {
-    this.accountService.deleteTransaction(+this.route.snapshot.params.id, this.index);
-    this.db.updateTransactions(+this.route.snapshot.params.id);
+    this.accountService.deleteTransaction(this.route.snapshot.params.id, this.index);
+    this.db.updateTransactions(this.route.snapshot.params.id);
   }
 
   onSubmit(): void {
     this.editMode = false;
     this.transactionForm.value.amount = Number(this.transactionForm.value.amount);
-    const accID = +this.route.snapshot.params.id;
+    const accID = this.route.snapshot.params.id;
     this.accountService.updateTransaction(accID, this.transactionForm.value, this.index);
     this.db.updateTransactions(accID);
   }

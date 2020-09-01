@@ -37,17 +37,20 @@ export class IdService {
     return id;
   }
 
-  public setKnownIds(accs: Account[]): void {
+  public setKnownIds(accs: {[s: string]: Account}): void {
     this.accs = [];
     this.trans = [];
-    accs.forEach((acc) => {
-      this.accs.push(acc.id);
-      if (acc.transactions) {
-        acc.transactions.forEach((t) => {
-          this.trans.push(t.id);
-        });
+    for (const id in accs) {
+      if (Object.prototype.hasOwnProperty.call(accs, id)) {
+        const acc = accs[id];
+        this.accs.push(acc.id);
+        if (acc.transactions) {
+          acc.transactions.forEach((t) => {
+            this.trans.push(t.id);
+          });
+        }
       }
-    });
+    }
   }
 
   public deleteAcc(id: string): void {

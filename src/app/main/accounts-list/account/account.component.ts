@@ -1,3 +1,4 @@
+import { ActivatedRoute, Router } from '@angular/router';
 import { Account } from './../../../shared/account.model';
 import { Component, OnInit, Input, } from '@angular/core';
 
@@ -8,10 +9,14 @@ import { Component, OnInit, Input, } from '@angular/core';
 })
 export class AccountComponent implements OnInit {
   @Input() account: Account;
-  @Input() index: number;
+  @Input() id: string;
 
-  constructor() { }
+  constructor(private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
+  }
+
+  onNewTransaction(): void {
+    this.router.navigate(['/main', `${this.id}`, 'new']);
   }
 }

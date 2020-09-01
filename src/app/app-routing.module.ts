@@ -5,7 +5,6 @@ import { Routes, RouterModule, ExtraOptions } from '@angular/router';
 
 import { AuthGuard } from './auth/auth.guard';
 import { AuthRedirectGuard } from './auth/auth-redirect.guard';
-import { AccountGuard } from './main/account-details/account.guard';
 
 import { MainComponent } from './main/main.component';
 import { AuthComponent } from './auth/auth.component';

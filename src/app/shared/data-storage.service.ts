@@ -17,27 +17,32 @@ export class DataStorageService {
   }
 
   storeAccounts(): void {
-    const accounts = this.accountService.getAccounts();
+    const accounts = JSON.stringify(this.accountService.getAccounts());
     this.http.put(`https://budgetys-9ff7a.firebaseio.com/users/${ this.authService.user.value.id }/accounts.json`, accounts)
     .subscribe(response => {
       console.log(response);
     });
   }
 
-  fetchAccounts(): Observable<Account[]> {
-    return this.http.get<Account[]>(
+  fetchAccounts(): Observable<{[s: string]: Account}> {
+    return this.http.get<{[s: string]: Account}>(
       `https://budgetys-9ff7a.firebaseio.com/users/${this.authService.user.value.id}/accounts.json`
     )
       .pipe(
         map(accounts => {
           if (accounts) {
-            return accounts.map(acc => {
-              const transactions = acc.transactions ? acc.transactions : [];
-              return new Account(acc.name, acc.type, transactions, acc.balance, acc.id);
-            });
+            for (const id in accounts) {
+              if (Object.prototype.hasOwnProperty.call(accounts, id)) {
+                const acc = accounts[id];
+                const transactions = acc.transactions ? acc.transactions : [];
+                accounts[id] = new Account(acc.name, acc.type, transactions, acc.balance, id);
+              }
+            }
+            console.log(accounts);
+            return accounts;
           }
           else {
-            return [];
+            return {};
           }
         }),
         tap(accounts => {
@@ -47,8 +52,8 @@ export class DataStorageService {
       );
   }
 
-  updateTransactions(accID: number): void {
-    const acc = this.accountService.getAccountByIndex(accID);
+  updateTransactions(accID: string): void {
+    const acc = this.accountService.getAccountById(accID);
     this.http.put(`https://budgetys-9ff7a.firebaseio.com/users/${ this.authService.user.value.id }/accounts/${accID}.json`, acc)
       .subscribe(response => {
       console.log(response);

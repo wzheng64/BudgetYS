@@ -1,5 +1,5 @@
 <div class="card">
-  <a class="account" [routerLink]="[index]" routerLinkActive="active">
+  <a class="account" [routerLink]="[id]" routerLinkActive="active">
     <div class="card-body">
       <h5 class="card-title">{{ account.name }}</h5>
       <p class="card-text">{{ account.formatType() }}
@@ -8,5 +8,5 @@
       $ {{ account.formatBalance() }}
     </div>
   </a>
-  <button class="btn-sm btn-secondary">+</button>
+  <button class="btn-sm btn-secondary" (click)="onNewTransaction()">+</button>
 </div>

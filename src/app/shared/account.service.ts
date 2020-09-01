@@ -6,68 +6,60 @@ import { Subject } from 'rxjs/internal/Subject';
 
 @Injectable({ providedIn: 'root' })
 export class AccountService {
-  accountsChanged = new Subject<Account[]>();
+  accountsChanged = new Subject<{[s: string]: Account}>();
   transactionsChanged = new Subject<Transaction[]>();
 
   constructor(private idService: IdService){}
 
-  private accounts: Account[] = [];
+  private accounts: {[s: string]: Account} = {};
   private mainAccount: string;
 
-  public getAccounts(): Account[] {
-    return this.accounts.slice();
+  public getAccounts(): {[s: string]: Account} {
+    return {... this.accounts};
   }
 
-  public getAccountByIndex(index: number): Account {
-    return this.accounts.slice()[index];
-  }
+  // public getAccountByIndex(index: number): Account {
+  //   return this.accounts.slice()[index];
+  // }
 
   public getAccountById(id: string): Account {
-    this.accounts.forEach((acc, i) => {
-      if (acc.id === id) {
-        return this.accounts.slice()[i];
-      }
-    });
-    return null;
+    return {... this.accounts}[id];
   }
 
   public addAccount(acc: Account): void {
-    const realAcc = new Account(acc.name, acc.type, acc.transactions, acc.balance, this.idService.generateAcc());
-    this.accounts.push(realAcc);
-    this.accountsChanged.next(this.accounts.slice());
+    const id = this.idService.generateAcc();
+    const realAcc = new Account(acc.name, acc.type, acc.transactions, acc.balance, id);
+    this.accounts[id] = realAcc;
+    this.accountsChanged.next({...this.accounts});
   }
 
-  public modifyAccount(acc: Account, accID: number): void {
+  public modifyAccount(acc: Account, accID: string): void {
     this.accounts[accID].balance = acc.balance;
     this.accounts[accID].name = acc.name;
     this.accounts[accID].type = acc.type;
-    this.accountsChanged.next(this.accounts.slice());
+    this.accountsChanged.next({...this.accounts});
   }
 
-  public deleteAccount(accID: number): void {
-    this.idService.deleteAcc(this.accounts[accID].id);
-    this.accounts.splice(accID, 1);
-    this.accountsChanged.next(this.accounts.slice());
+  public deleteAccount(id: string): void {
+    this.idService.deleteAcc(this.accounts[id].id);
+    delete this.accounts[id];
+    this.accountsChanged.next({...this.accounts});
   }
 
-  public setAccounts(accounts: Account[]): void {
+  public setAccounts(accounts: {[s: string]: Account}): void {
     this.accounts = accounts;
-    this.accountsChanged.next(this.accounts.slice());
+    this.accountsChanged.next({...this.accounts});
   }
 
   public setMain(id: string): void {
-    this.accounts.forEach((acc, i) => {
-      if (acc.id === id) {
-        this.mainAccount = id;
-      }
-    });
+    this.mainAccount = id;
   }
 
   public getMain(): Account {
-    return this.getAccountById(this.mainAccount);
+    return {...this.accounts}[this.mainAccount];
   }
 
-  public addTransaction(accID: number, trans: Transaction): void {
+  public addTransaction(accID: string, trans: Transaction): void {
     const realTrans = new Transaction(trans.name, trans.date, trans.description, trans.amount, trans.type, this.idService.generateTrans());
     this.accounts[accID].transactions.push(realTrans);
     if (this.accounts[accID].type === 'CC') {
@@ -87,7 +79,7 @@ export class AccountService {
       }
     }
     this.transactionsChanged.next(this.accounts[accID].transactions.slice());
-    this.accountsChanged.next(this.accounts.slice());
+    this.accountsChanged.next({...this.accounts});
   }
 
   public updateTransaction(accID: number, trans: Transaction, tID: number): void {
@@ -130,14 +122,14 @@ export class AccountService {
       }
     }
     this.transactionsChanged.next(this.accounts[accID].transactions.slice());
-    this.accountsChanged.next(this.accounts.slice());
+    this.accountsChanged.next({...this.accounts});
   }
 
   public getTransactions(accID: number): Transaction[] {
     return this.accounts[accID].transactions.slice();
   }
 
-  public deleteTransaction(accID: number, tID: number): void {
+  public deleteTransaction(accID: string, tID: number): void {
     const trans = this.accounts[accID].transactions[tID];
     if (this.accounts[accID].type === 'CC') {
       if (trans.type === '-') {
@@ -157,7 +149,7 @@ export class AccountService {
     }
     this.accounts[accID].transactions.splice(tID, 1);
     this.transactionsChanged.next(this.accounts[accID].transactions.slice());
-    this.accountsChanged.next(this.accounts.slice());
+    this.accountsChanged.next({...this.accounts});
     this.idService.deleteTrans(trans.id);
   }
 }

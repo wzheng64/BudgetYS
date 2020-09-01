@@ -12,7 +12,7 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 })
 export class AccountDetailsComponent implements OnInit {
   account: Account;
-  index: number;
+  index: string;
   delete = false;
 
   constructor(private accountService: AccountService, private db: DataStorageService,
@@ -20,8 +20,8 @@ export class AccountDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params ) => {
-      this.index = +params.id;
-      this.account = this.accountService.getAccountByIndex(this.index);
+      this.index = params.id;
+      this.account = this.accountService.getAccountById(this.index);
     });
   }
 

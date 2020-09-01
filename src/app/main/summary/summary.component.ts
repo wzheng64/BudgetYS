@@ -15,23 +15,25 @@ export class SummaryComponent implements OnInit {
   constructor(private accountService: AccountService) { }
 
   ngOnInit(): void {
-    this.accountService.accountsChanged.subscribe((accounts: Account[]) => {
+    this.accountService.accountsChanged.subscribe((accounts: {[s: string]: Account}) => {
       this.setTotal(accounts);
     });
     this.setTotal(this.accountService.getAccounts());
   }
 
-  private setTotal(accs: Account[]): void {
+  private setTotal(accs: {[s: string]: Account}): void {
     this.total = 0;
-    accs.forEach((acc) => {
-      if (acc.type !== 'CC') {
-        this.total += acc.balance;
+    for (const id in accs) {
+      if (Object.prototype.hasOwnProperty.call(accs, id)) {
+        const acc = accs[id];
+        if (acc.type !== 'CC') {
+          this.total += acc.balance;
+        }
+        else {
+          this.total -= acc.balance;
+        }
       }
-      else {
-        this.total -= acc.balance;
-      }
-    });
+    }
     this.total = Number(this.total.toFixed(2));
   }
-
 }

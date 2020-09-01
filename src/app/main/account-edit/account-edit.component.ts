@@ -11,7 +11,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
   styleUrls: ['./account-edit.component.css']
 })
 export class AccountEditComponent implements OnInit {
-  id: number;
+  id: string;
   accountForm: FormGroup;
   editMode = false;
   isMain = false;
@@ -21,7 +21,7 @@ export class AccountEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
-      this.id = +params.id;
+      this.id = params.id;
       this.editMode = params.id != null;
     });
     this.initForm();
@@ -57,7 +57,7 @@ export class AccountEditComponent implements OnInit {
 
   private initForm(): void {
     if (this.editMode) {
-      const acc = this.accountService.getAccountByIndex(this.id);
+      const acc = this.accountService.getAccountById(this.id);
       this.accountForm = new FormGroup({
         name: new FormControl(acc.name, Validators.required),
         type: new FormControl(acc.type, Validators.required),
