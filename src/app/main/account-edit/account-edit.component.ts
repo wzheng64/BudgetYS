@@ -39,6 +39,16 @@ export class AccountEditComponent implements OnInit {
       this.db.storeAccounts();
       this.router.navigate(['/main']);
     }
+    if (this.accountService.getMain() && this.accountService.getMain().id === this.id) {
+      if (!this.isMain) {
+        this.accountService.setMain('');
+        this.db.updateMain('');
+      }
+    }
+    if (this.isMain) {
+      this.accountService.setMain(this.id);
+      this.db.updateMain(this.id);
+    }
   }
 
   public getTypes(): string[] {
@@ -74,6 +84,9 @@ export class AccountEditComponent implements OnInit {
         balance: new FormControl(0, [Validators.required,
           Validators.pattern(/^((0\.[0-9][1-9])|([1-9][0-9]*(\.[0-9]{2})?)|0|0.00)$/), Validators.min(0)])
       });
+    }
+    if (this.accountService.getMain() && this.accountService.getMain().id === this.id) {
+      this.isMain = true;
     }
   }
 }

@@ -59,4 +59,21 @@ export class DataStorageService {
       console.log(response);
     });
   }
+
+  updateMain(accID: string): void {
+    const main = {main: accID};
+    this.http.patch(`https://budgetys-9ff7a.firebaseio.com/users/${ this.authService.user.value.id }.json`, main)
+      .subscribe(response => {
+        console.log(response);
+      });
+  }
+
+  getMain(): void {
+    this.http.get<string>(`https://budgetys-9ff7a.firebaseio.com/users/${this.authService.user.value.id}/main.json`)
+      .pipe(
+        take(1),
+        tap((s) => {
+          this.accountService.setMain(s);
+    })).subscribe();
+  }
 }

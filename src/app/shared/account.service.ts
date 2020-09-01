@@ -8,6 +8,7 @@ import { Subject } from 'rxjs/internal/Subject';
 export class AccountService {
   accountsChanged = new Subject<{[s: string]: Account}>();
   transactionsChanged = new Subject<Transaction[]>();
+  mainChanged = new Subject<Account>();
 
   constructor(private idService: IdService){}
 
@@ -53,6 +54,7 @@ export class AccountService {
 
   public setMain(id: string): void {
     this.mainAccount = id;
+    this.mainChanged.next(this.getMain());
   }
 
   public getMain(): Account {

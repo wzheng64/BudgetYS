@@ -33,7 +33,7 @@
           <div class="col-2">
             <label for="main">Set main?</label>
             <div class="input-group-text">
-              <input type="checkbox" [checked]="isMain">
+              <input type="checkbox" [(checked)]="isMain" (change)="isMain = !isMain">
             </div>
           </div>
         </div>

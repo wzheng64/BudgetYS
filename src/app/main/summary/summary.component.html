@@ -4,4 +4,9 @@
       <h2 [ngClass]="{'positive': total>0, 'negative': total<0}"> Total: ${{ total }} </h2>
     </div>
   </div>
+  <div class="row">
+    <div class="card">
+      <h2 *ngIf="main">Main account: {{ main.name }} </h2>
+    </div>
+  </div>
 </div>
