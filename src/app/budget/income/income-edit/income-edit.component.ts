@@ -21,9 +21,9 @@ export class IncomeEditComponent implements OnInit {
     this.incomeForm = new FormGroup({
       income: new FormControl(null, [Validators.required, Validators.pattern(/^((0\.[0-9][1-9])|([1-9][0-9]*(\.[0-9]{2})?)|0|0.00)$/)]),
       period: new FormControl('Weekly', Validators.required),
+      accounts: new FormArray([]),
       remainder: new FormControl(null, Validators.required),
       lastPayDate: new FormControl(null, Validators.required),
-      accounts: new FormArray([])
     });
   }
 
@@ -42,7 +42,8 @@ export class IncomeEditComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log(this.incomeForm.value);
+    this.budgetService.setIncome(this.incomeForm.value);
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   onCancel(): void {
