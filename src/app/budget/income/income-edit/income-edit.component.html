@@ -56,7 +56,7 @@
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1">Name:</span>
                   </div>
-                  <select name="account" id="account" formControlName="id">
+                  <select name="account" id="account" formControlName="accountID">
                     <option *ngFor="let acc of accounts" [value]="acc.id">{{ acc.name }}</option>
                   </select>
                 </div>

@@ -12,16 +12,18 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 export class IncomeComponent implements OnInit, OnDestroy {
   income: Income;
   periods = this.budgetService.getPeriods();
+  currentPeriod: string;
   incomeSub: Subscription;
 
   constructor(private route: ActivatedRoute, private router: Router,
               private budgetService: BudgetService) { }
 
   ngOnInit(): void {
-    this.budgetService.incomeChanged.subscribe((income: Income) => {
+    this.incomeSub = this.budgetService.incomeChanged.subscribe((income: Income) => {
       this.income = income;
     });
     this.income = this.budgetService.getIncome();
+    this.currentPeriod = this.income.period;
   }
 
   onChangeIncome(): void {

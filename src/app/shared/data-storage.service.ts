@@ -1,3 +1,5 @@
+import { BudgetService } from './budget.service';
+import { Income } from './income.model';
 import { IdService } from './id.service';
 import { AuthService } from './../auth/auth.service';
 
@@ -12,7 +14,7 @@ import { Account } from './account.model';
 @Injectable({ providedIn: 'root' })
 export class DataStorageService {
   constructor(private http: HttpClient, private accountService: AccountService,
-              private authService: AuthService, private idService: IdService) {
+              private authService: AuthService, private idService: IdService, private budgetService: BudgetService) {
 
   }
 
@@ -75,5 +77,22 @@ export class DataStorageService {
         tap((s) => {
           this.accountService.setMain(s);
     })).subscribe();
+  }
+
+  updateIncome(income: Income): void {
+    this.http.patch<Income>(`https://budgetys-9ff7a.firebaseio.com/users/${this.authService.user.value.id}/income.json`, income)
+      .subscribe(response => {
+        console.log(response);
+      });
+  }
+
+  getIncome(): void {
+    this.http.get<Income>(`https://budgetys-9ff7a.firebaseio.com/users/${this.authService.user.value.id}/income.json`)
+      .pipe(
+        take(1),
+        tap((inc) => {
+          this.budgetService.setIncome(inc);
+        })
+      ).subscribe();
   }
 }
