@@ -11,6 +11,7 @@ import { AccountEditComponent } from './main/account-edit/account-edit.component
 import { AccountDetailsComponent } from './main/account-details/account-details.component';
 import { TransactionNewComponent } from './main/account-details/transaction-new/transaction-new.component';
 import { BudgetComponent } from './budget/budget.component';
+import { IncomeEditComponent } from './budget/income/income-edit/income-edit.component';
 
 const routingConfig: ExtraOptions = {
   paramsInheritanceStrategy: 'always'
@@ -26,7 +27,9 @@ const appRoutes: Routes = [
       { path: 'edit', component: AccountEditComponent }
     ] }
   ] },
-  { path: 'budgeting', component: BudgetComponent, canActivate: [AuthGuard]},
+  { path: 'budgeting', component: BudgetComponent, canActivate: [AuthGuard], resolve: [AccountResolverService], children: [
+    { path: 'income', component: IncomeEditComponent}
+  ]},
   { path: 'auth', component: AuthComponent, canActivate: [AuthRedirectGuard] }
 ];
 

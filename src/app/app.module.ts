@@ -3,7 +3,7 @@ import { PlaceholderDirective } from './shared/placeholder/placeholder.directive
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -23,6 +23,8 @@ import { TransactionItemComponent } from './main/account-details/transaction-lis
 import { AlertComponent } from './shared/alert/alert.component';
 import { IncomeDisplayComponent } from './main/income-display/income-display.component';
 import { BudgetComponent } from './budget/budget.component';
+import { IncomeComponent } from './budget/income/income.component';
+import { IncomeEditComponent } from './budget/income/income-edit/income-edit.component';
 
 @NgModule({
   declarations: [
@@ -42,11 +44,14 @@ import { BudgetComponent } from './budget/budget.component';
     TransactionItemComponent,
     AlertComponent,
     IncomeDisplayComponent,
-    BudgetComponent
+    BudgetComponent,
+    IncomeComponent,
+    IncomeEditComponent
   ],
   imports: [
     BrowserModule,
     ReactiveFormsModule,
+    FormsModule,
     AppRoutingModule,
     HttpClientModule
   ],

@@ -1,0 +1,92 @@
+<div class="container my-3">
+  <div class="row">
+    <div class="col">
+      <h4 style="color: #E6E8E6">Edit your income information</h4>
+      <form [formGroup]="incomeForm" (ngSubmit)="onSubmit()">
+        <div class="col-xs-3 my-3">
+          <button type="submit" class="btn btn-success mr-2" [disabled]="!incomeForm.valid">Save</button>
+          <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
+        </div>
+        <div class="row mb-3">
+          <div class="col-4">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">$</span>
+              </div>
+              <input type="number" id="income" formControlName="income" class="form-control" placeholder="Income">
+            </div>
+          </div>
+          <div class="col">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Pay Period</span>
+              </div>
+              <select name="period" id="period" formControlName="period">
+                <option *ngFor="let p of periods" [value]="p">{{ p }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-4">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Last Pay Date:</span>
+              </div>
+              <input type="date" name="lastPayDate" id="date" formControlName="lastPayDate" class="form-control">
+            </div>
+          </div>
+          <div class="col">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Deposit Remainder in:</span>
+              </div>
+              <select name="remainder" id="remainder" formControlName="remainder">
+                <option *ngFor="let acc of accounts" [value]="acc.id">{{ acc.name }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col" formArrayName="accounts">
+            <div class="row" *ngFor="let accountCtrl of accountsControl; let i = index" [formGroupName]="i"
+              style="margin-top: 10px">
+              <div class="col-md-3">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">Name:</span>
+                  </div>
+                  <select name="account" id="account" formControlName="id">
+                    <option *ngFor="let acc of accounts" [value]="acc.id">{{ acc.name }}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">Proportion:</span>
+                  </div>
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">$</span>
+                  </div>
+                  <div class="col-xs-2">
+                    <input type="number" class="form-control" formControlName="proportion">
+                  </div>
+                </div>
+              </div>
+              <div class="col-xs-2">
+                <button type="button" class="btn btn-danger" (click)="onDeleteAccount(i)">X</button>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-xs-12 ml-3">
+                <button type="button" class="btn btn-outline-success" (click)="onAddAccount()">Add Account</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
