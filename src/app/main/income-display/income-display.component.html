@@ -1,1 +1,15 @@
-<p>income-display works!</p>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-header text-center">Your {{ income.period }} income:</div>
+        <h4 class="card-title text-center">${{ income.income.toFixed(2) }} every {{ periodFormat(income.period) }}</h4>
+        <h5 class="card-subtitle text-muted text-center">Last pay date: {{ income.lastPayDate }}</h5>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item text-center" *ngFor="let acc of accounts">${{ acc.proportion.toFixed(2) }} goes to {{ acc.name }}</li>
+          <li class="list-group-item text-center">${{ leftover.toFixed(2) }} goes to {{ mainAccount }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
