@@ -1,4 +1,4 @@
-<div id="main" class="container-fluid">
+<!-- <div id="main" class="container-fluid">
   <div id="background" class="container-fluid">
     <div class="row vh-100">
       <div id="bg1" class="col vh-100"></div>
@@ -40,6 +40,54 @@
             {{ !isLoginMode ? 'Login' : 'Sign Up' }}</button>
         </div>
       </form>
+    </div>
+  </div>
+</div> -->
+<div id="main" class="container-fluid">
+  <div id="background" class="container-fluid">
+    <div class="row vh-100" style="background: #2E4057;">
+      <div class="col-4">
+        <div class="row vh-100">
+          <div id="login" class="col-8 align-self-center">
+            <div *ngIf="isLoading" style="text-align: center">
+              <app-loading-spinner></app-loading-spinner>
+            </div>
+            <form [formGroup]="authForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading">
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" formControlName="email" class="form-control">
+                <span *ngIf="!authForm.get('email').valid  &&  authForm.get('email').touched && !isLoginMode" class="help-block">
+                  <span *ngIf="authForm.get('email').errors['required']" class="help-block">This field is required!</span>
+                </span>
+              </div>
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" formControlName="password" class="form-control">
+                <span *ngIf="!authForm.get('password').valid  &&  authForm.get('password').touched  && !isLoginMode" class="help-block">
+                  <span *ngIf="authForm.get('password').errors['required']" class="help-block">This field is required!</span>
+                  <span *ngIf="authForm.get('password').errors['minlength']" class="help-block">You need to have at least {{ authForm.get('password').errors['minlength'].requiredLength }}</span>
+                </span>
+              </div>
+              <div>
+                <button class="btn btn-primary" type="submit"
+                  [disabled]="!authForm.valid">{{ isLoginMode ? 'Login' : 'Sign Up' }}</button> |
+                <button class="btn btn-primary" (click)="onSwitchMode()" type="button">Switch to
+                  {{ !isLoginMode ? 'Login' : 'Sign Up' }}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div id="info" class="col-8 vh-100 text-center align-items-center">
+        <div class="row vh-100">
+          <div class="col-8 align-self-center">
+            <h1 class="my-auto">
+              Welcome to BudgetYS
+            </h1>
+            <h6>Control your finances. Budget YourSelf.</h6>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

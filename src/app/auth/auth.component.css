@@ -1,4 +1,4 @@
-#bg1 {
+/* #bg1 {
   background-color: #E6E8E6;
 }
 #bg2 {
@@ -15,6 +15,12 @@
 }
 #background {
   position: absolute;
+} */
+
+#info {
+  background-image: linear-gradient(to bottom right, #FE621D, #E6C229);
+  color: white;
+
 }
 
 #login {
@@ -22,6 +28,14 @@
   margin: auto;
   width: 50%;
   padding: 10px;
+  background: #AF3800;
+  color: white;
+  border: 1px #AF3800;
+  border-radius: 10px;
+}
+
+.btn-primary {
+  background-color: #2E4057;
 }
 
 #main.container-fluid {
