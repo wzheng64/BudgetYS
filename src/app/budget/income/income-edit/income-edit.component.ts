@@ -82,7 +82,7 @@ export class IncomeEditComponent implements OnInit {
     const names = [];
     const accs = this.accountService.getAccounts();
     for (const id in accs) {
-      if (Object.prototype.hasOwnProperty.call(accs, id) && accs[id].type !== 'CC') {
+      if (Object.prototype.hasOwnProperty.call(accs, id)) {
         names.push(accs[id]);
       }
     }

@@ -1,3 +1,5 @@
+import { DataStorageService } from 'src/app/shared/data-storage.service';
+import { BudgetService } from './../shared/budget.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,9 +9,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainComponent implements OnInit {
 
-  constructor() { }
+  constructor(private budgetService: BudgetService, private data: DataStorageService) { }
 
   ngOnInit(): void {
+    if (this.budgetService.payIncome()) {
+      this.data.storeAccounts();
+    }
   }
-
 }

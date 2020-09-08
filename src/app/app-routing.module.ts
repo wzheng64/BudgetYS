@@ -1,3 +1,4 @@
+import { IncomeResolverService } from './shared/income-resolver.service';
 import { AccountResolverService } from './shared/account-resolver.service';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, ExtraOptions } from '@angular/router';
@@ -19,7 +20,7 @@ const routingConfig: ExtraOptions = {
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/main', pathMatch: 'full'},
-  { path: 'main', component: MainComponent, canActivate: [AuthGuard], resolve: [AccountResolverService], children: [
+  { path: 'main', component: MainComponent, canActivate: [AuthGuard], resolve: [AccountResolverService, IncomeResolverService], children: [
     { path: '', component: AccountDetailsComponent },
     { path: 'new', component: AccountEditComponent },
     { path: ':id', component: AccountDetailsComponent, children: [
@@ -27,7 +28,7 @@ const appRoutes: Routes = [
       { path: 'edit', component: AccountEditComponent }
     ] }
   ] },
-  { path: 'budgeting', component: BudgetComponent, canActivate: [AuthGuard], resolve: [AccountResolverService], children: [
+  { path: 'budgeting', component: BudgetComponent, canActivate: [AuthGuard], resolve: [AccountResolverService, IncomeResolverService], children: [
     { path: 'income', component: IncomeEditComponent}
   ]},
   { path: 'auth', component: AuthComponent, canActivate: [AuthRedirectGuard] }

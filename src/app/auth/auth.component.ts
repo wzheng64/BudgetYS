@@ -1,3 +1,4 @@
+import { BudgetService } from './../shared/budget.service';
 import { Router } from '@angular/router';
 import { Component, ComponentFactoryResolver, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
@@ -19,7 +20,7 @@ export class AuthComponent implements OnInit, OnDestroy {
 
   private closeSub: Subscription;
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService, private budgetService: BudgetService) {}
 
   ngOnInit(): void {
     this.authForm = new FormGroup({
@@ -50,7 +51,6 @@ export class AuthComponent implements OnInit, OnDestroy {
     }
 
     authObs.subscribe(resData => {
-      console.log(resData);
       this.isLoading = false;
       this.router.navigate(['/main']);
     }, errorMessage => {

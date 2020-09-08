@@ -1,14 +1,14 @@
-import { transactionType } from './enums';
+import { TransactionType } from './enums';
 
 export class Transaction {
   public name: string;
-  public date: Date;
+  public date: string;
   public description: string;
   public amount: number;
-  public type: transactionType;
+  public type: TransactionType;
   public id: string;
 
-  constructor(name: string, date: Date, description: string, amount: number, type: transactionType, id: string) {
+  constructor(name: string, date: string, description: string, amount: number, type: TransactionType, id: string) {
     this.name = name;
     this.date = date;
     this.description = description;

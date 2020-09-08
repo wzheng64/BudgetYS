@@ -16,13 +16,10 @@ export class AccountResolverService implements Resolve<{ [s: string]: Account; }
 
     if (Object.keys(accs).length === 0) {
       this.data.getMain();
-      this.data.getIncome();
       return this.data.fetchAccounts();
     }
     else {
       return accs;
     }
   }
-
-
 }

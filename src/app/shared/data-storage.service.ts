@@ -86,8 +86,28 @@ export class DataStorageService {
       });
   }
 
-  getIncome(): void {
-    this.http.get<Income>(`https://budgetys-9ff7a.firebaseio.com/users/${this.authService.user.value.id}/income.json`)
+  // getIncome(): void {
+  //   this.http.get<Income>(`https://budgetys-9ff7a.firebaseio.com/users/${this.authService.user.value.id}/income.json`)
+  //     .pipe(
+  //       take(1),
+  //       map(income => {
+  //         if (income) {
+  //           const accounts = income.accounts ? income.accounts : [];
+  //           const fixedIncome = new Income(income.income, income.period, accounts, income.remainder, income.lastPayDate);
+  //           return fixedIncome;
+  //         }
+  //         else {
+  //           return {};
+  //         }
+  //       }),
+  //       tap((inc: Income) => {
+  //         this.budgetService.setIncome(inc);
+  //       })
+  //     ).subscribe();
+  // }
+
+  getIncome(): Observable<Income> {
+    return this.http.get<Income>(`https://budgetys-9ff7a.firebaseio.com/users/${this.authService.user.value.id}/income.json`)
       .pipe(
         take(1),
         map(income => {
@@ -103,6 +123,7 @@ export class DataStorageService {
         tap((inc: Income) => {
           this.budgetService.setIncome(inc);
         })
-      ).subscribe();
+      );
   }
 }
+

@@ -4,7 +4,7 @@ export enum AccountType {
   CC = 'CC'
 }
 
-export enum transactionType {
+export enum TransactionType {
   Plus= '+',
   Minus= '-'
 }
