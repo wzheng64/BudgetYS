@@ -25,6 +25,9 @@ import { IncomeDisplayComponent } from './main/income-display/income-display.com
 import { BudgetComponent } from './budget/budget.component';
 import { IncomeComponent } from './budget/income/income.component';
 import { IncomeEditComponent } from './budget/income/income-edit/income-edit.component';
+import { CategoriesListComponent } from './budget/categories-list/categories-list.component';
+import { CategoryDetailsComponent } from './budget/category-details/category-details.component';
+import { CategoryEditComponent } from './budget/category-edit/category-edit.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +49,10 @@ import { IncomeEditComponent } from './budget/income/income-edit/income-edit.com
     IncomeDisplayComponent,
     BudgetComponent,
     IncomeComponent,
-    IncomeEditComponent
+    IncomeEditComponent,
+    CategoriesListComponent,
+    CategoryDetailsComponent,
+    CategoryEditComponent
   ],
   imports: [
     BrowserModule,

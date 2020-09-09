@@ -1,3 +1,5 @@
+import { CategoryEditComponent } from './budget/category-edit/category-edit.component';
+import { CategoryDetailsComponent } from './budget/category-details/category-details.component';
 import { IncomeResolverService } from './shared/income-resolver.service';
 import { AccountResolverService } from './shared/account-resolver.service';
 import { NgModule } from '@angular/core';
@@ -19,18 +21,26 @@ const routingConfig: ExtraOptions = {
 };
 
 const appRoutes: Routes = [
-  { path: '', redirectTo: '/main', pathMatch: 'full'},
-  { path: 'main', component: MainComponent, canActivate: [AuthGuard], resolve: [AccountResolverService, IncomeResolverService], children: [
-    { path: '', component: AccountDetailsComponent },
-    { path: 'new', component: AccountEditComponent },
-    { path: ':id', component: AccountDetailsComponent, children: [
-      { path: 'new', component: TransactionNewComponent },
-      { path: 'edit', component: AccountEditComponent }
-    ] }
-  ] },
-  { path: 'budgeting', component: BudgetComponent, canActivate: [AuthGuard], resolve: [AccountResolverService, IncomeResolverService], children: [
-    { path: 'income', component: IncomeEditComponent}
-  ]},
+  { path: '', redirectTo: '/main', pathMatch: 'full' },
+  {
+    path: 'main', component: MainComponent, canActivate: [AuthGuard], resolve: [AccountResolverService, IncomeResolverService], children: [
+      { path: '', component: AccountDetailsComponent },
+      { path: 'new', component: AccountEditComponent },
+      {
+        path: ':id', component: AccountDetailsComponent, children: [
+          { path: 'new', component: TransactionNewComponent },
+          { path: 'edit', component: AccountEditComponent }
+        ]
+      }
+    ]
+  },
+  { path: 'budgeting', component: BudgetComponent, canActivate: [AuthGuard],
+    resolve: [AccountResolverService, IncomeResolverService], children: [
+      { path: '', component: CategoryDetailsComponent },
+      { path: 'new', component: CategoryEditComponent },
+      { path: 'income', component: IncomeEditComponent },
+    ]
+  },
   { path: 'auth', component: AuthComponent, canActivate: [AuthRedirectGuard] }
 ];
 
@@ -38,4 +48,4 @@ const appRoutes: Routes = [
   imports: [RouterModule.forRoot(appRoutes, routingConfig)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
