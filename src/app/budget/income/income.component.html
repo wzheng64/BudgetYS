@@ -10,7 +10,7 @@
         <div class="input-group-prepend">
           <span class="input-group-text" id="basic-addon1">Period:</span>
         </div>
-        <select name="period" id="period" [(ngModel)]="currentPeriod">
+        <select name="period" id="period" [(ngModel)]="currentPeriod" (change)="onPeriodChange($event)">
           <option *ngFor="let p of periods" [value]="p"> {{ p }}</option>
         </select>
       </div>

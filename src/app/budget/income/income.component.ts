@@ -1,3 +1,4 @@
+import { HttpEvent } from '@angular/common/http';
 import { Income } from './../../shared/income.model';
 import { Subscription } from 'rxjs';
 import { BudgetService } from './../../shared/budget.service';
@@ -23,11 +24,20 @@ export class IncomeComponent implements OnInit, OnDestroy {
       this.income = income;
     });
     this.income = this.budgetService.getIncome();
-    this.currentPeriod = this.income.period;
+    if (localStorage.getItem('currentPeriod')) {
+      this.currentPeriod = localStorage.getItem('currentPeriod');
+    }
+    else {
+      this.currentPeriod = this.income.period;
+    }
   }
 
   onChangeIncome(): void {
     this.router.navigate(['income'], {relativeTo: this.route});
+  }
+
+  onPeriodChange(event): void {
+    localStorage.setItem('currentPeriod', event.target.value);
   }
 
   ngOnDestroy(): void {
