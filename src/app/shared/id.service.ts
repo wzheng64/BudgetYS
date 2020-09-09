@@ -5,7 +5,8 @@ import { v4 as uuidv4 } from 'uuid';
 @Injectable({providedIn: 'root'})
 export class IdService {
   private accs: string[] = [];
-  private trans: string[] = [];
+  private trans: { [s: string]: number};
+  private cat: string[] = [];
 
   public generateAcc(): string {
     let id = uuidv4();
@@ -24,29 +25,38 @@ export class IdService {
 
   public generateTrans(): string {
     let id = uuidv4();
+    while (!(id in this.trans)) {
+      id = uuidv4();
+    }
+    this.trans[id] = 1;
+    return id;
+  }
+
+  public generateCategory(): string {
+    let id = uuidv4();
     let unique = false;
     while (!unique) {
-      if (this.trans.indexOf(id) === -1) {
+      if (this.cat.indexOf(id) === -1) {
         unique = true;
       }
       else {
         id = uuidv4();
       }
     }
-    this.trans.push(id);
+    this.cat.push(id);
     return id;
   }
 
   public setKnownIds(accs: {[s: string]: Account}): void {
     this.accs = [];
-    this.trans = [];
+    this.trans = {};
     for (const id in accs) {
       if (Object.prototype.hasOwnProperty.call(accs, id)) {
         const acc = accs[id];
         this.accs.push(acc.id);
         if (acc.transactions) {
           acc.transactions.forEach((t) => {
-            this.trans.push(t.id);
+            this.trans[t.id] = 1;
           });
         }
       }
@@ -58,6 +68,10 @@ export class IdService {
   }
 
   public deleteTrans(id: string): void {
-    this.trans.splice(this.trans.indexOf(id), 1);
+    delete this.trans[id];
+  }
+
+  public deleteCat(id: string): void {
+    this.cat.splice(this.cat.indexOf(id), 1);
   }
 }
