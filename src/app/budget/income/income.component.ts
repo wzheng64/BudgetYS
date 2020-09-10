@@ -40,6 +40,31 @@ export class IncomeComponent implements OnInit, OnDestroy {
     localStorage.setItem('currentPeriod', event.target.value);
   }
 
+  formatIncome(): number {
+    const period = this.income.period;
+    let num = 0;
+    let den = 0;
+    if (period === 'Weekly') {
+      den = 1;
+    }
+    else if (period === 'Bi-Weekly') {
+      den = 2;
+    }
+    else if (period === 'Monthly') {
+      den = 4;
+    }
+    if (this.currentPeriod === 'Weekly') {
+      num = 1;
+    }
+    else if (this.currentPeriod === 'Bi-Weekly') {
+      num = 2;
+    }
+    else if (this.currentPeriod === 'Monthly') {
+      num = 4;
+    }
+    return this.income.income * (num / den);
+  }
+
   ngOnDestroy(): void {
     this.incomeSub.unsubscribe();
   }
