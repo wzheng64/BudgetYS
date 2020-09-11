@@ -1,3 +1,4 @@
+import { Category } from './category.model';
 import { BudgetService } from './budget.service';
 import { Income } from './income.model';
 import { IdService } from './id.service';
@@ -101,6 +102,39 @@ export class DataStorageService {
         }),
         tap((inc: Income) => {
           this.budgetService.setIncome(inc);
+        })
+      );
+  }
+
+  storeCategories(): void {
+    const categories = this.budgetService.getCategories();
+    this.http.patch<{[s: string]: Category}>(`https://budgetys-9ff7a.firebaseio.com/users/${this.authService.user.value.id}/categories.json`
+    , categories)
+      .subscribe(res => console.log(res));
+  }
+
+  getCategories(): Observable<{[s: string]: Category}> {
+    return this.http.get<{[s: string]: Category}>(`https://budgetys-9ff7a.firebaseio.com/users/${this.authService.user.value.id}/categories.json`)
+      .pipe(
+        map((categories: {[s: string]: Category}) => {
+          if (categories) {
+            for (const id in categories) {
+              if (Object.prototype.hasOwnProperty.call(categories, id)) {
+                const cat = categories[id];
+                const transactions = cat.transactions ? cat.transactions : {};
+                const subCat = cat.subCategories ? cat.subCategories : {};
+                categories[id] = new Category(cat.name, transactions, cat.amount, id, cat.period, subCat);
+              }
+            }
+            return categories;
+          }
+          else {
+            return {};
+          }
+        }),
+        tap(categories => {
+          this.budgetService.setCategories(categories);
+          this.idService.setCatIds(categories);
         })
       );
   }

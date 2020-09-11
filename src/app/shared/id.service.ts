@@ -1,3 +1,4 @@
+import { Category } from 'src/app/shared/category.model';
 import { Account } from './account.model';
 import { Injectable } from '@angular/core';
 import { v4 as uuidv4 } from 'uuid';
@@ -59,6 +60,14 @@ export class IdService {
             this.trans[t.id] = 1;
           });
         }
+      }
+    }
+  }
+
+  public setCatIds(cats: {[s: string]: Category}): void {
+    for (const id in cats) {
+      if (Object.prototype.hasOwnProperty.call(cats, id)) {
+        this.cat.push(id);
       }
     }
   }

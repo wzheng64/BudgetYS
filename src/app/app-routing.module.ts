@@ -1,3 +1,4 @@
+import { CategoryResolverService } from './shared/category-resolver.service';
 import { CategoryEditComponent } from './budget/category-edit/category-edit.component';
 import { CategoryDetailsComponent } from './budget/category-details/category-details.component';
 import { IncomeResolverService } from './shared/income-resolver.service';
@@ -35,7 +36,7 @@ const appRoutes: Routes = [
     ]
   },
   { path: 'budgeting', component: BudgetComponent, canActivate: [AuthGuard],
-    resolve: [AccountResolverService, IncomeResolverService], children: [
+    resolve: [AccountResolverService, IncomeResolverService, CategoryResolverService], children: [
       { path: '', component: CategoryDetailsComponent },
       { path: 'new', component: CategoryEditComponent },
       { path: 'income', component: IncomeEditComponent },

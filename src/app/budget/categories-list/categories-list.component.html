@@ -5,3 +5,11 @@
     </div>
   </div>
 </div>
+<hr>
+<div class="container">
+  <div class="row mb-4" *ngFor="let cat of categoriesList; let i=index;">
+    <div class="col-12">
+      <app-category-item [category]="cat" [id]="cat.id"></app-category-item>
+    </div>
+  </div>
+</div>

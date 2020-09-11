@@ -1,7 +1,47 @@
-<div class="container">
+<div class="container mt-3">
   <div class="row">
     <div class="col">
-      <p>Editing!</p>
+      <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col-md-5">
+            <div class="form-group">
+              <label for="name">Name of Category</label>
+              <input type="text" id="name" formControlName="name" class="form-control">
+              <span *ngIf="!categoryForm.get('name').valid && categoryForm.get('name').touched">A name is required!</span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-5">
+            <div class="form-group">
+              <label for="balance">Amount</label>
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1">$</span>
+                </div>
+                <input type="number" id="amount" formControlName="amount" class="form-control">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1">Every</span>
+                </div>
+                <select name="period" id="period" formControlName="period">
+                  <option *ngFor="let p of periods" [value]="p"> {{ p }}</option>
+                </select>
+              </div>
+              <span *ngIf="!categoryForm.get('amount').valid && categoryForm.get('amount').touched">Please enter a valid amount.</span>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3">
+            <button class="btn btn-outline-light" type="submit" [disabled]="!categoryForm.valid">{{ editMode ? 'Submit Changes' : 'Create Category'}}</button>
+          </div>
+          <div class="col-md-2">
+            <button class="btn btn-outline-danger float-right" (click)="onCancel()">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 </div>

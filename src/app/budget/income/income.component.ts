@@ -26,6 +26,7 @@ export class IncomeComponent implements OnInit, OnDestroy {
     this.income = this.budgetService.getIncome();
     if (localStorage.getItem('currentPeriod')) {
       this.currentPeriod = localStorage.getItem('currentPeriod');
+      this.budgetService.setCurrentPeriod(this.currentPeriod);
     }
     else {
       this.currentPeriod = this.income.period;
@@ -38,6 +39,7 @@ export class IncomeComponent implements OnInit, OnDestroy {
 
   onPeriodChange(event): void {
     localStorage.setItem('currentPeriod', event.target.value);
+    this.budgetService.setCurrentPeriod(event.target.value);
   }
 
   formatIncome(): number {

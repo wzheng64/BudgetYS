@@ -8,3 +8,8 @@ export enum TransactionType {
   Plus= '+',
   Minus= '-'
 }
+
+export enum CategoryType {
+  Expense = 'Expense',
+  Goal = 'Goal'
+}

@@ -1,7 +1,7 @@
+import { Category } from './category.model';
 import { Subject } from 'rxjs';
 import { IdService } from './id.service';
 import { Transaction } from './transaction.model';
-import { Account } from './account.model';
 import { Income } from './income.model';
 import { Injectable } from '@angular/core';
 import { AccountService } from './account.service';
@@ -10,10 +10,14 @@ import { TransactionType } from './enums';
 @Injectable({ providedIn: 'root' })
 export class BudgetService {
   incomeChanged = new Subject<Income>();
+  catChanged = new Subject<{[s: string]: Category}>();
+  currentPeriodChanged = new Subject<string>();
 
   constructor(private idService: IdService, private accountService: AccountService) { }
 
   private income: Income;
+  private categories: {[s: string]: Category} = {};
+  private currentPeriod = '';
 
   getIncome(): Income {
     return { ... this.income };
@@ -111,5 +115,27 @@ export class BudgetService {
       this.setPayDate(new Date(paid.getUTCFullYear(), paid.getUTCMonth(), paid.getUTCDate()));
     }
     return changed;
+  }
+
+  addCategory(cat: Category): void {
+    this.categories[cat.id] = cat;
+    this.catChanged.next(this.categories);
+  }
+
+  getCategories(): {[s: string]: Category} {
+    return {... this.categories};
+  }
+
+  setCategories(cats: {[s: string]: Category}): void {
+    this.categories = cats;
+  }
+
+  getCurrentPeriod(): string {
+    return this.currentPeriod;
+  }
+
+  setCurrentPeriod(s: string): void {
+    this.currentPeriod = s;
+    this.currentPeriodChanged.next(this.currentPeriod);
   }
 }
