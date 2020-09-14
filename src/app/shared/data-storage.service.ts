@@ -37,7 +37,7 @@ export class DataStorageService {
             for (const id in accounts) {
               if (Object.prototype.hasOwnProperty.call(accounts, id)) {
                 const acc = accounts[id];
-                const transactions = acc.transactions ? acc.transactions : [];
+                const transactions = acc.transactions ? acc.transactions : {};
                 accounts[id] = new Account(acc.name, acc.type, transactions, acc.balance, id);
               }
             }

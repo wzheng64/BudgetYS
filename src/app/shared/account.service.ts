@@ -7,7 +7,8 @@ import { Subject } from 'rxjs/internal/Subject';
 @Injectable({ providedIn: 'root' })
 export class AccountService {
   accountsChanged = new Subject<{[s: string]: Account}>();
-  transactionsChanged = new Subject<Transaction[]>();
+  transactionsChanged = new Subject<{[date: number]: {[s: string]: Transaction}}>();
+  transToCat = new Subject<Transaction>();
   mainChanged = new Subject<Account>();
 
   constructor(private idService: IdService){}
@@ -18,10 +19,6 @@ export class AccountService {
   public getAccounts(): {[s: string]: Account} {
     return {... this.accounts};
   }
-
-  // public getAccountByIndex(index: number): Account {
-  //   return this.accounts.slice()[index];
-  // }
 
   public getAccountById(id: string): Account {
     return {... this.accounts}[id];
@@ -61,8 +58,14 @@ export class AccountService {
   }
 
   public addTransaction(accID: string, trans: Transaction): void {
+    const transDate = trans.date;
+    const offset = new Date(transDate).getDay();
+    const week = new Date(transDate).setDate(new Date(transDate).getDate() - offset);
     const realTrans = new Transaction(trans.name, trans.date, trans.description, trans.amount, trans.type, this.idService.generateTrans());
-    this.accounts[accID].transactions.push(realTrans);
+    if (!this.accounts[accID].transactions[week]) {
+      this.accounts[accID].transactions[week] = {};
+    }
+    this.accounts[accID].transactions[week][realTrans.id] = realTrans;
     if (this.accounts[accID].type === 'CC') {
       if (trans.type === '-') {
         this.accounts[accID].balance += trans.amount;
@@ -79,33 +82,23 @@ export class AccountService {
         this.accounts[accID].balance += trans.amount;
       }
     }
-    this.transactionsChanged.next(this.accounts[accID].transactions.slice());
+    if (trans.category) {
+      this.transToCat.next(trans);
+    }
+    this.transactionsChanged.next(this.accounts[accID].transactions);
     this.accountsChanged.next({...this.accounts});
   }
 
-  public updateTransaction(accID: number, trans: Transaction, tID: number): void {
-    const oldT = this.accounts[accID].transactions[tID];
-    if (this.accounts[accID].type === 'CC') {
-      if (oldT.type === '-') {
-        this.accounts[accID].balance -= oldT.amount;
-      }
-      else {
-        this.accounts[accID].balance += oldT.amount;
-      }
+  public updateTransaction(accID: string, trans: Transaction, tID: string, oldDate: string): void {
+    this.deleteTransaction(accID, tID, oldDate);
+    const transDate = trans.date;
+    const offset = new Date(transDate).getDay();
+    const week = new Date(transDate).setDate(new Date(transDate).getDate() - offset);
+    if (!this.accounts[accID].transactions[week]) {
+      this.accounts[accID].transactions[week] = {};
     }
-    else {
-      if (oldT.type === '-') {
-        this.accounts[accID].balance += oldT.amount;
-      }
-      else {
-        this.accounts[accID].balance -= oldT.amount;
-      }
-    }
-    this.accounts[accID].transactions[tID].amount = trans.amount;
-    this.accounts[accID].transactions[tID].date = trans.date;
-    this.accounts[accID].transactions[tID].description = trans.description;
-    this.accounts[accID].transactions[tID].name = trans.name;
-    this.accounts[accID].transactions[tID].type = trans.type;
+    const realTrans = {... trans, id: tID};
+    this.accounts[accID].transactions[week][tID] = realTrans;
     if (this.accounts[accID].type === 'CC') {
       if (trans.type === '-') {
         this.accounts[accID].balance += trans.amount;
@@ -122,16 +115,22 @@ export class AccountService {
         this.accounts[accID].balance += trans.amount;
       }
     }
-    this.transactionsChanged.next(this.accounts[accID].transactions.slice());
+    if (trans.category) {
+      this.transToCat.next(trans);
+    }
+    this.transactionsChanged.next({... this.accounts[accID].transactions});
     this.accountsChanged.next({...this.accounts});
   }
 
-  public getTransactions(accID: number): Transaction[] {
-    return this.accounts[accID].transactions.slice();
+  public getTransactions(accID: number): {[date: number]: {[s: string]: Transaction}} {
+    return {... this.accounts[accID].transactions};
   }
 
-  public deleteTransaction(accID: string, tID: number): void {
-    const trans = this.accounts[accID].transactions[tID];
+  public deleteTransaction(accID: string, tID: string, date: string): void {
+    const transDate = date;
+    const offset = new Date(transDate).getDay();
+    const week = new Date(transDate).setDate(new Date(transDate).getDate() - offset);
+    const trans = this.accounts[accID].transactions[week][tID];
     if (this.accounts[accID].type === 'CC') {
       if (trans.type === '-') {
         this.accounts[accID].balance -= trans.amount;
@@ -148,8 +147,8 @@ export class AccountService {
         this.accounts[accID].balance -= trans.amount;
       }
     }
-    this.accounts[accID].transactions.splice(tID, 1);
-    this.transactionsChanged.next(this.accounts[accID].transactions.slice());
+    delete this.accounts[accID].transactions[week][tID];
+    this.transactionsChanged.next({... this.accounts[accID].transactions});
     this.accountsChanged.next({...this.accounts});
     this.idService.deleteTrans(trans.id);
   }

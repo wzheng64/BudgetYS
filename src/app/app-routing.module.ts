@@ -29,7 +29,7 @@ const appRoutes: Routes = [
       { path: 'new', component: AccountEditComponent },
       {
         path: ':id', component: AccountDetailsComponent, children: [
-          { path: 'new', component: TransactionNewComponent },
+          { path: 'new', component: TransactionNewComponent, resolve: [CategoryResolverService] },
           { path: 'edit', component: AccountEditComponent }
         ]
       }

@@ -35,7 +35,7 @@ export class TransactionItemComponent implements OnInit {
   }
 
   onDelete(): void {
-    this.accountService.deleteTransaction(this.route.snapshot.params.id, this.index);
+    this.accountService.deleteTransaction(this.route.snapshot.params.id, this.transaction.id, this.transaction.date);
     this.db.updateTransactions(this.route.snapshot.params.id);
   }
 
@@ -43,7 +43,7 @@ export class TransactionItemComponent implements OnInit {
     this.editMode = false;
     this.transactionForm.value.amount = Number(this.transactionForm.value.amount);
     const accID = this.route.snapshot.params.id;
-    this.accountService.updateTransaction(accID, this.transactionForm.value, this.index);
+    this.accountService.updateTransaction(accID, this.transactionForm.value, this.transaction.id, this.transaction.date);
     this.db.updateTransactions(accID);
   }
 

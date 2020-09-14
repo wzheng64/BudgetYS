@@ -17,12 +17,27 @@ export class TransactionListComponent implements OnInit, OnDestroy {
   constructor(private accountService: AccountService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.transSub = this.accountService.transactionsChanged.subscribe((trans: Transaction[]) => {
-      this.transactions = trans;
+    this.transSub = this.accountService.transactionsChanged.subscribe((trans: {[date: number]: {[s: string]: Transaction}}) => {
+      this.loadTransactions(trans);
     });
     this.pSub = this.route.params.subscribe((params: Params) => {
-      this.transactions = this.accountService.getTransactions(params.id);
+      this.loadTransactions(this.accountService.getTransactions(params.id));
     });
+  }
+
+  private loadTransactions(transactions: {[date: number]: {[s: string]: Transaction}}): void {
+    this.transactions = [];
+    for (const date in transactions) {
+      if (Object.prototype.hasOwnProperty.call(transactions, date)) {
+        const weekOfTransactions = transactions[date];
+        for (const transactionID in weekOfTransactions) {
+          if (Object.prototype.hasOwnProperty.call(weekOfTransactions, transactionID)) {
+            const transaction = weekOfTransactions[transactionID];
+            this.transactions.push(transaction);
+          }
+        }
+      }
+    }
   }
 
   ngOnDestroy(): void {
