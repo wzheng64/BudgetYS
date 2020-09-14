@@ -40,6 +40,7 @@ const appRoutes: Routes = [
       { path: '', component: CategoryDetailsComponent },
       { path: 'new', component: CategoryEditComponent },
       { path: 'income', component: IncomeEditComponent },
+      { path: ':id', component: CategoryDetailsComponent }
     ]
   },
   { path: 'auth', component: AuthComponent, canActivate: [AuthRedirectGuard] }
