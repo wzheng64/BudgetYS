@@ -150,24 +150,12 @@ export class BudgetService {
     if (!this.categories[categoryid].transactions[week]) {
       this.categories[categoryid].transactions[week] = {};
     }
-    // if (trans.type === '-') {
-    //   this.categories[trans.category].amount -= trans.amount;
-    // }
-    // else {
-    //   this.categories[trans.category].amount += trans.amount;
-    // }
     this.categories[categoryid].transactions[week][trans.id] = trans;
     this.catChanged.next({... this.categories});
   }
 
   deleteTransaction(trans: Transaction): void {
     const week = this.help.getWeek(trans.date);
-    // if (trans.type === '-') {
-    //   this.categories[trans.category].amount += trans.amount;
-    // }
-    // else {
-    //   this.categories[trans.category].amount -= trans.amount;
-    // }
     delete this.categories[trans.category].transactions[week][trans.id];
     this.catChanged.next({... this.categories});
   }

@@ -75,6 +75,15 @@
               <span *ngIf="!transactionForm.get('amount').valid && transactionForm.get('amount').touched">Please enter a valid amount.</span>
             </div>
           </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="category">Category (optional)</label>
+              <select name="category" id="category" formControlName="category">
+                <option [value]=""></option>
+                <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
+              </select>
+            </div>
+          </div>
         </div>
         <div class="row">
           <div class="col">
