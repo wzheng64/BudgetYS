@@ -22,6 +22,12 @@ export class DataStorageService {
 
   }
 
+  /*
+    Below are all the database storage methods for accounts and their transactions
+  */
+
+  /* Below are methods that handle accounts */
+
   storeAccounts(): void {
     const accounts = JSON.stringify(this.accountService.getAccounts());
     this.http.put(`https://budgetys-9ff7a.firebaseio.com/users/${ this.authService.user.value.id }/accounts.json`, accounts)
@@ -57,6 +63,8 @@ export class DataStorageService {
       );
   }
 
+  /* Methods based on the transactions of accounts */
+
   updateTransactions(accID: string): void {
     const acc = this.accountService.getAccountById(accID);
     this.http.put(`https://budgetys-9ff7a.firebaseio.com/users/${ this.authService.user.value.id }/accounts/${accID}.json`, acc)
@@ -64,6 +72,8 @@ export class DataStorageService {
       console.log(response);
     });
   }
+
+  /* Below are methods that handle the main account selection */
 
   updateMain(accID: string): void {
     const main = {main: accID};
@@ -81,6 +91,10 @@ export class DataStorageService {
           this.accountService.setMain(s);
     })).subscribe();
   }
+
+  /*
+    Below are methods based on the income
+  */
 
   updateIncome(income: Income): void {
     this.http.patch<Income>(`https://budgetys-9ff7a.firebaseio.com/users/${this.authService.user.value.id}/income.json`, income)
@@ -108,6 +122,12 @@ export class DataStorageService {
         })
       );
   }
+
+  /*
+    Below are methods that handle the income and their transactions
+  */
+
+  /* Below are methods that handle categories */
 
   storeCategories(): void {
     const categories = this.budgetService.getCategories();
@@ -142,9 +162,35 @@ export class DataStorageService {
       );
   }
 
-  updateCategoryTransactions(transaction: Transaction): void {
+  updateCategory(categoryid: string, properties?: string[]): void {
+    const category = this.budgetService.getCategory(categoryid);
+    if (properties) {
+      properties.forEach((property: string) => {
+        if (category[property]) {
+          this.http.put(`https://budgetys-9ff7a.firebaseio.com/users/${this.authService.user.value.id}/categories/${categoryid}/${property}.json`, category[property])
+          .subscribe(res => console.log(res));
+        }
+      });
+    }
+    else {
+      this.http.put<Category>(`https://budgetys-9ff7a.firebaseio.com/users/${this.authService.user.value.id}/categories/${categoryid}.json`,
+      category)
+      .subscribe(res => console.log(res));
+    }
+  }
+
+  /* Below are methods that handle transactions for categories */
+
+  addCategoryTransactions(transaction: Transaction): void {
     const week = this.help.getWeek(transaction.date);
     this.http.patch<Transaction>(`https://budgetys-9ff7a.firebaseio.com/users/${this.authService.user.value.id}/categories/${transaction.category}/transactions/${week}/${transaction.id}.json`, transaction)
+    .subscribe(res => console.log(res));
+  }
+
+  updateCategoryTransactions(transaction: Transaction): void {
+    const week = this.help.getWeek(transaction.date);
+    const category = this.budgetService.getCategory(transaction.category);
+    this.http.put<Category>(`https://budgetys-9ff7a.firebaseio.com/users/${this.authService.user.value.id}/categories/${transaction.category}/transactions/${week}.json`, category.transactions[week])
     .subscribe(res => console.log(res));
   }
 }

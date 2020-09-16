@@ -1,3 +1,4 @@
+import { IdService } from './../../../shared/id.service';
 import { HelperService } from './../../../shared/helper.service';
 import { Subscription } from 'rxjs';
 import { BudgetService } from './../../../shared/budget.service';
@@ -20,7 +21,7 @@ export class TransactionNewComponent implements OnInit, OnDestroy {
 
   constructor(private accountService: AccountService, private router: Router,
               private route: ActivatedRoute, private db: DataStorageService,
-              private budgetService: BudgetService) { }
+              private budgetService: BudgetService, private idService: IdService) { }
 
   ngOnInit(): void {
     this.catSub = this.budgetService.catChanged.subscribe((cats: { [s: string]: Category }) => {
@@ -52,12 +53,14 @@ export class TransactionNewComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
+    const transactionid = this.idService.generateTrans();
     this.transactionForm.value.amount = Number(this.transactionForm.value.amount);
+    this.transactionForm.value.id = transactionid;
     const accID = this.route.snapshot.params.id;
     this.accountService.addTransaction(accID, this.transactionForm.value);
     if (this.transactionForm.value.category) {
       this.budgetService.addTransaction(this.transactionForm.value);
-      this.db.updateCategoryTransactions(this.transactionForm.value);
+      this.db.addCategoryTransactions(this.transactionForm.value);
     }
     this.db.updateTransactions(accID);
     this.router.navigate(['../'], { relativeTo: this.route });

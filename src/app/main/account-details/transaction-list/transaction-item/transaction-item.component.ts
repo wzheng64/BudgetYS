@@ -4,6 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { AccountService } from 'src/app/shared/account.service';
 import { Transaction } from './../../../../shared/transaction.model';
 import { Component, OnInit, Input } from '@angular/core';
+import { BudgetService } from 'src/app/shared/budget.service';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-transaction-item',
@@ -17,7 +19,8 @@ export class TransactionItemComponent implements OnInit {
   editMode = false;
   transactionForm: FormGroup;
 
-  constructor(private accountService: AccountService, private route: ActivatedRoute, private db: DataStorageService) { }
+  constructor(private accountService: AccountService, private route: ActivatedRoute,
+              private db: DataStorageService, private budgetService: BudgetService) { }
 
   ngOnInit(): void {
   }
@@ -36,6 +39,11 @@ export class TransactionItemComponent implements OnInit {
 
   onDelete(): void {
     this.accountService.deleteTransaction(this.route.snapshot.params.id, this.transaction.id, this.transaction.date);
+    console.log(this.budgetService.getCategories());
+    if (this.transaction.category) {
+      this.budgetService.deleteTransaction(this.transaction);
+      this.db.updateCategoryTransactions(this.transaction);
+    }
     this.db.updateTransactions(this.route.snapshot.params.id);
   }
 

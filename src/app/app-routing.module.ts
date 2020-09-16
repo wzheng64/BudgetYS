@@ -28,8 +28,8 @@ const appRoutes: Routes = [
       { path: '', component: AccountDetailsComponent },
       { path: 'new', component: AccountEditComponent },
       {
-        path: ':id', component: AccountDetailsComponent, children: [
-          { path: 'new', component: TransactionNewComponent, resolve: [CategoryResolverService] },
+        path: ':id', component: AccountDetailsComponent, resolve: [CategoryResolverService], children: [
+          { path: 'new', component: TransactionNewComponent },
           { path: 'edit', component: AccountEditComponent }
         ]
       }

@@ -61,7 +61,7 @@ export class AccountService {
   public addTransaction(accID: string, trans: Transaction): void {
     const week = this.help.getWeek(trans.date);
     const realTrans = new Transaction(trans.name, trans.date, trans.description,
-                                      trans.amount, trans.type, this.idService.generateTrans(), trans.category);
+                                      trans.amount, trans.type, trans.id, trans.category);
     if (!this.accounts[accID].transactions[week]) {
       this.accounts[accID].transactions[week] = {};
     }
