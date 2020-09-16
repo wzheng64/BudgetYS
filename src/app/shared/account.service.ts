@@ -1,3 +1,4 @@
+import { HelperService } from './helper.service';
 import { IdService } from './id.service';
 import { Transaction } from './transaction.model';
 import { Account } from './account.model';
@@ -11,7 +12,7 @@ export class AccountService {
   transToCat = new Subject<Transaction>();
   mainChanged = new Subject<Account>();
 
-  constructor(private idService: IdService){}
+  constructor(private idService: IdService, private help: HelperService){}
 
   private accounts: {[s: string]: Account} = {};
   private mainAccount: string;
@@ -58,10 +59,9 @@ export class AccountService {
   }
 
   public addTransaction(accID: string, trans: Transaction): void {
-    const transDate = trans.date;
-    const offset = new Date(transDate).getDay();
-    const week = new Date(transDate).setDate(new Date(transDate).getDate() - offset);
-    const realTrans = new Transaction(trans.name, trans.date, trans.description, trans.amount, trans.type, this.idService.generateTrans());
+    const week = this.help.getWeek(trans.date);
+    const realTrans = new Transaction(trans.name, trans.date, trans.description,
+                                      trans.amount, trans.type, this.idService.generateTrans(), trans.category);
     if (!this.accounts[accID].transactions[week]) {
       this.accounts[accID].transactions[week] = {};
     }
@@ -91,9 +91,7 @@ export class AccountService {
 
   public updateTransaction(accID: string, trans: Transaction, tID: string, oldDate: string): void {
     this.deleteTransaction(accID, tID, oldDate);
-    const transDate = trans.date;
-    const offset = new Date(transDate).getDay();
-    const week = new Date(transDate).setDate(new Date(transDate).getDate() - offset);
+    const week = this.help.getWeek(trans.date);
     if (!this.accounts[accID].transactions[week]) {
       this.accounts[accID].transactions[week] = {};
     }
@@ -127,9 +125,7 @@ export class AccountService {
   }
 
   public deleteTransaction(accID: string, tID: string, date: string): void {
-    const transDate = date;
-    const offset = new Date(transDate).getDay();
-    const week = new Date(transDate).setDate(new Date(transDate).getDate() - offset);
+    const week = this.help.getWeek(date);
     const trans = this.accounts[accID].transactions[week][tID];
     if (this.accounts[accID].type === 'CC') {
       if (trans.type === '-') {

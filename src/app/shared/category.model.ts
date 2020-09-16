@@ -2,13 +2,13 @@ import { Transaction } from './transaction.model';
 
 export class Category {
   public name: string;
-  public transactions: { [s: string]: Transaction };
+  public transactions: {[date: number]: {[transactionid: string]: Transaction}};
   public amount: number;
   public id: string;
   public period: string;
-  public subCategories: {[s: string]: Category};
+  public subCategories: {[categoryid: string]: Category};
 
-  constructor(name: string, transactions: { [s: string]: Transaction }, balance: number, id: string,
+  constructor(name: string, transactions: {[date: number]: {[s: string]: Transaction}}, balance: number, id: string,
               period: string, subs: {[s: string]: Category}) {
     this.name = name;
     this.transactions = transactions;

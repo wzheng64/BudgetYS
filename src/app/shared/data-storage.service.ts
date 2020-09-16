@@ -1,3 +1,4 @@
+import { Transaction } from './transaction.model';
 import { Category } from './category.model';
 import { BudgetService } from './budget.service';
 import { Income } from './income.model';
@@ -11,11 +12,13 @@ import { map, tap, take, exhaustMap } from 'rxjs/operators';
 
 import { AccountService } from './account.service';
 import { Account } from './account.model';
+import { HelperService } from './helper.service';
 
 @Injectable({ providedIn: 'root' })
 export class DataStorageService {
   constructor(private http: HttpClient, private accountService: AccountService,
-              private authService: AuthService, private idService: IdService, private budgetService: BudgetService) {
+              private authService: AuthService, private idService: IdService,
+              private budgetService: BudgetService, private help: HelperService) {
 
   }
 
@@ -137,6 +140,12 @@ export class DataStorageService {
           this.idService.setCatIds(categories);
         })
       );
+  }
+
+  updateCategoryTransactions(transaction: Transaction): void {
+    const week = this.help.getWeek(transaction.date);
+    this.http.patch<Transaction>(`https://budgetys-9ff7a.firebaseio.com/users/${this.authService.user.value.id}/categories/${transaction.category}/transactions/${week}/${transaction.id}.json`, transaction)
+    .subscribe(res => console.log(res));
   }
 }
 

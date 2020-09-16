@@ -1,3 +1,4 @@
+import { HelperService } from './helper.service';
 import { Category } from './category.model';
 import { Subject } from 'rxjs';
 import { IdService } from './id.service';
@@ -13,10 +14,10 @@ export class BudgetService {
   catChanged = new Subject<{[s: string]: Category}>();
   currentPeriodChanged = new Subject<string>();
 
-  constructor(private idService: IdService, private accountService: AccountService) { }
+  constructor(private idService: IdService, private accountService: AccountService, private help: HelperService) { }
 
   private income: Income;
-  private categories: {[s: string]: Category} = {};
+  private categories: {[categoryid: string]: Category} = {};
   private currentPeriod = '';
 
   getIncome(): Income {
@@ -137,5 +138,14 @@ export class BudgetService {
   setCurrentPeriod(s: string): void {
     this.currentPeriod = s;
     this.currentPeriodChanged.next(this.currentPeriod);
+  }
+
+  addTransaction(trans: Transaction): void {
+    const categoryid = trans.category;
+    const week = this.help.getWeek(trans.date);
+    if (!this.categories[categoryid].transactions[week]) {
+      this.categories[categoryid].transactions[week] = {};
+    }
+    this.categories[categoryid].transactions[week][trans.id] = trans;
   }
 }
