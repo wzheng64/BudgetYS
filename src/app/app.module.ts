@@ -29,6 +29,7 @@ import { CategoriesListComponent } from './budget/categories-list/categories-lis
 import { CategoryDetailsComponent } from './budget/category-details/category-details.component';
 import { CategoryEditComponent } from './budget/category-edit/category-edit.component';
 import { CategoryItemComponent } from './budget/categories-list/category-item/category-item.component';
+import { CategorySummaryComponent } from './budget/category-summary/category-summary.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { CategoryItemComponent } from './budget/categories-list/category-item/ca
     CategoriesListComponent,
     CategoryDetailsComponent,
     CategoryEditComponent,
-    CategoryItemComponent
+    CategoryItemComponent,
+    CategorySummaryComponent
   ],
   imports: [
     BrowserModule,

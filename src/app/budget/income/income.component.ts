@@ -24,13 +24,7 @@ export class IncomeComponent implements OnInit, OnDestroy {
       this.income = income;
     });
     this.income = this.budgetService.getIncome();
-    if (localStorage.getItem('currentPeriod')) {
-      this.currentPeriod = localStorage.getItem('currentPeriod');
-      this.budgetService.setCurrentPeriod(this.currentPeriod);
-    }
-    else {
-      this.currentPeriod = this.income.period;
-    }
+    this.currentPeriod = this.budgetService.getCurrentPeriod();
   }
 
   onChangeIncome(): void {

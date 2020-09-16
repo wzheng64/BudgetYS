@@ -119,6 +119,12 @@ export class DataStorageService {
         }),
         tap((inc: Income) => {
           this.budgetService.setIncome(inc);
+          if (localStorage.getItem('currentPeriod')) {
+            this.budgetService.setCurrentPeriod(localStorage.getItem('currentPeriod'));
+          }
+          else {
+            this.budgetService.setCurrentPeriod(inc.period);
+          }
         })
       );
   }
