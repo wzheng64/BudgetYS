@@ -47,75 +47,77 @@ export class BudgetService {
     const localPaidDate = new Date(this.income.lastPayDate);
     const paid = new Date(localPaidDate.getUTCFullYear(), localPaidDate.getUTCMonth(), localPaidDate.getUTCDate());
     let changed = false;
-    if (this.income.period === 'Weekly') {
-      let leftover = this.income.income;
-      while (paid.setUTCDate(paid.getUTCDate() + 7) < utcToday) {
-        changed = true;
-        this.income.accounts.forEach((acc) => {
-          const payment = new Transaction(`${this.income.period} Income payment`,
+    if (Object.prototype.hasOwnProperty.call('income', this.income) && this.income.income > 0) {
+      if (this.income.period === 'Weekly') {
+        let leftover = this.income.income;
+        while (paid.setUTCDate(paid.getUTCDate() + 7) < utcToday) {
+          changed = true;
+          this.income.accounts.forEach((acc) => {
+            const payment = new Transaction(`${this.income.period} Income payment`,
+              new Date(paid).toLocaleDateString('en-CA'),
+              `${this.income.period} Automatic Income payment for ${paid.toLocaleDateString('en-CA')}`,
+              acc.proportion,
+              TransactionType.Plus, this.idService.generateTrans());
+            this.accountService.addTransaction(acc.accountID, payment);
+            leftover -= acc.proportion;
+          });
+          const payRemainder = new Transaction(`${this.income.period} Income payment`,
             new Date(paid).toLocaleDateString('en-CA'),
             `${this.income.period} Automatic Income payment for ${paid.toLocaleDateString('en-CA')}`,
-            acc.proportion,
+            leftover,
             TransactionType.Plus, this.idService.generateTrans());
-          this.accountService.addTransaction(acc.accountID, payment);
-          leftover -= acc.proportion;
-        });
-        const payRemainder = new Transaction(`${this.income.period} Income payment`,
-          new Date(paid).toLocaleDateString('en-CA'),
-          `${this.income.period} Automatic Income payment for ${paid.toLocaleDateString('en-CA')}`,
-          leftover,
-          TransactionType.Plus, this.idService.generateTrans());
-        this.accountService.addTransaction(this.income.remainder, payRemainder);
+          this.accountService.addTransaction(this.income.remainder, payRemainder);
+        }
+        paid.setUTCDate(paid.getUTCDate() - 7);
       }
-      paid.setUTCDate(paid.getUTCDate() - 7);
-    }
-    else if (this.income.period === 'Bi-Weekly') {
-      let leftover = this.income.income;
-      while (paid.setUTCDate(paid.getUTCDate() + 14) < utcToday) {
-        changed = true;
-        this.income.accounts.forEach((acc) => {
-          const payment = new Transaction(`${this.income.period} Income payment`,
+      else if (this.income.period === 'Bi-Weekly') {
+        let leftover = this.income.income;
+        while (paid.setUTCDate(paid.getUTCDate() + 14) < utcToday) {
+          changed = true;
+          this.income.accounts.forEach((acc) => {
+            const payment = new Transaction(`${this.income.period} Income payment`,
+              new Date(paid).toLocaleDateString('en-CA'),
+              `${this.income.period} Automatic Income payment for ${paid.toLocaleDateString('en-CA')}`,
+              acc.proportion,
+              TransactionType.Plus, this.idService.generateTrans());
+            this.accountService.addTransaction(acc.accountID, payment);
+            leftover -= acc.proportion;
+          });
+          const payRemainder = new Transaction(`${this.income.period} Income payment`,
             new Date(paid).toLocaleDateString('en-CA'),
             `${this.income.period} Automatic Income payment for ${paid.toLocaleDateString('en-CA')}`,
-            acc.proportion,
+            leftover,
             TransactionType.Plus, this.idService.generateTrans());
-          this.accountService.addTransaction(acc.accountID, payment);
-          leftover -= acc.proportion;
-        });
-        const payRemainder = new Transaction(`${this.income.period} Income payment`,
-          new Date(paid).toLocaleDateString('en-CA'),
-          `${this.income.period} Automatic Income payment for ${paid.toLocaleDateString('en-CA')}`,
-          leftover,
-          TransactionType.Plus, this.idService.generateTrans());
-        this.accountService.addTransaction(this.income.remainder, payRemainder);
+          this.accountService.addTransaction(this.income.remainder, payRemainder);
+        }
+        paid.setUTCDate(paid.getUTCDate() - 14);
       }
-      paid.setUTCDate(paid.getUTCDate() - 14);
-    }
-    else {
-      let leftover = this.income.income;
-      while (paid.setUTCMonth(paid.getUTCMonth() + 1) < utcToday) {
-        changed = true;
-        this.income.accounts.forEach((acc) => {
-          const payment = new Transaction(`${this.income.period} Income payment`,
+      else {
+        let leftover = this.income.income;
+        while (paid.setUTCMonth(paid.getUTCMonth() + 1) < utcToday) {
+          changed = true;
+          this.income.accounts.forEach((acc) => {
+            const payment = new Transaction(`${this.income.period} Income payment`,
+              new Date(paid).toLocaleDateString('en-CA'),
+              `${this.income.period} Automatic Income payment for ${paid.toLocaleDateString('en-CA')}`,
+              acc.proportion,
+              TransactionType.Plus, this.idService.generateTrans());
+            this.accountService.addTransaction(acc.accountID, payment);
+            leftover -= acc.proportion;
+          });
+          const payRemainder = new Transaction(`${this.income.period} Income payment`,
             new Date(paid).toLocaleDateString('en-CA'),
             `${this.income.period} Automatic Income payment for ${paid.toLocaleDateString('en-CA')}`,
-            acc.proportion,
+            leftover,
             TransactionType.Plus, this.idService.generateTrans());
-          this.accountService.addTransaction(acc.accountID, payment);
-          leftover -= acc.proportion;
-        });
-        const payRemainder = new Transaction(`${this.income.period} Income payment`,
-          new Date(paid).toLocaleDateString('en-CA'),
-          `${this.income.period} Automatic Income payment for ${paid.toLocaleDateString('en-CA')}`,
-          leftover,
-          TransactionType.Plus, this.idService.generateTrans());
-        this.accountService.addTransaction(this.income.remainder, payRemainder);
+          this.accountService.addTransaction(this.income.remainder, payRemainder);
+        }
+        paid.setUTCMonth(paid.getUTCMonth() - 1);
       }
-      paid.setUTCMonth(paid.getUTCMonth() - 1);
-    }
-    // Set the new paydate
-    if (changed) {
-      this.setPayDate(new Date(paid.getUTCFullYear(), paid.getUTCMonth(), paid.getUTCDate()));
+      // Set the new paydate
+      if (changed) {
+        this.setPayDate(new Date(paid.getUTCFullYear(), paid.getUTCMonth(), paid.getUTCDate()));
+      }
     }
     return changed;
   }

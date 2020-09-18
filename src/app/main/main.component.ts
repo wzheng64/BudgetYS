@@ -12,7 +12,7 @@ export class MainComponent implements OnInit {
   constructor(private budgetService: BudgetService, private data: DataStorageService) { }
 
   ngOnInit(): void {
-    if (this.budgetService.payIncome()) {
+    if (this.budgetService.getIncome() !== undefined && this.budgetService.payIncome()) {
       this.data.storeAccounts();
     }
   }

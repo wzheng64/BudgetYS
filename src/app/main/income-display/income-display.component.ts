@@ -40,6 +40,10 @@ export class IncomeDisplayComponent implements OnInit, OnDestroy {
     }
   }
 
+  haveIncome(): boolean {
+    return this.income && this.income !== undefined && this.income.income > 0;
+  }
+
   private accountsFormat(income: Income): void {
     let money = income.income;
     income.accounts.forEach((acc) => {
