@@ -11,13 +11,13 @@ import { TransactionType } from './enums';
 @Injectable({ providedIn: 'root' })
 export class BudgetService {
   incomeChanged = new Subject<Income>();
-  catChanged = new Subject<{[s: string]: Category}>();
+  catChanged = new Subject<{ [s: string]: Category }>();
   currentPeriodChanged = new Subject<string>();
 
   constructor(private idService: IdService, private accountService: AccountService, private help: HelperService) { }
 
   private income: Income;
-  private categories: {[categoryid: string]: Category} = {};
+  private categories: { [categoryid: string]: Category } = {};
   private currentPeriod = '';
 
   getIncome(): Income {
@@ -43,11 +43,13 @@ export class BudgetService {
 
   payIncome(): boolean {
     const today = new Date();
-    const paid = new Date(this.income.lastPayDate);
+    const utcToday = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()).valueOf();
+    const localPaidDate = new Date(this.income.lastPayDate);
+    const paid = new Date(localPaidDate.getUTCFullYear(), localPaidDate.getUTCMonth(), localPaidDate.getUTCDate());
     let changed = false;
     if (this.income.period === 'Weekly') {
       let leftover = this.income.income;
-      while (paid.setUTCDate(paid.getUTCDate() + 7) <= today.valueOf()) {
+      while (paid.setUTCDate(paid.getUTCDate() + 7) < utcToday) {
         changed = true;
         this.income.accounts.forEach((acc) => {
           const payment = new Transaction(`${this.income.period} Income payment`,
@@ -69,7 +71,7 @@ export class BudgetService {
     }
     else if (this.income.period === 'Bi-Weekly') {
       let leftover = this.income.income;
-      while (paid.setUTCDate(paid.getUTCDate() + 14) <= today.valueOf()) {
+      while (paid.setUTCDate(paid.getUTCDate() + 14) < utcToday) {
         changed = true;
         this.income.accounts.forEach((acc) => {
           const payment = new Transaction(`${this.income.period} Income payment`,
@@ -91,7 +93,7 @@ export class BudgetService {
     }
     else {
       let leftover = this.income.income;
-      while (paid.setUTCMonth(paid.getUTCMonth() + 1) <= today.valueOf()) {
+      while (paid.setUTCMonth(paid.getUTCMonth() + 1) < utcToday) {
         changed = true;
         this.income.accounts.forEach((acc) => {
           const payment = new Transaction(`${this.income.period} Income payment`,
@@ -127,11 +129,11 @@ export class BudgetService {
     return this.categories[categoryid];
   }
 
-  getCategories(): {[s: string]: Category} {
-    return {... this.categories};
+  getCategories(): { [s: string]: Category } {
+    return { ... this.categories };
   }
 
-  setCategories(cats: {[s: string]: Category}): void {
+  setCategories(cats: { [s: string]: Category }): void {
     this.categories = cats;
   }
 
@@ -151,12 +153,12 @@ export class BudgetService {
       this.categories[categoryid].transactions[week] = {};
     }
     this.categories[categoryid].transactions[week][trans.id] = trans;
-    this.catChanged.next({... this.categories});
+    this.catChanged.next({ ... this.categories });
   }
 
   deleteTransaction(trans: Transaction): void {
     const week = this.help.getWeek(trans.date);
     delete this.categories[trans.category].transactions[week][trans.id];
-    this.catChanged.next({... this.categories});
+    this.catChanged.next({ ... this.categories });
   }
 }
