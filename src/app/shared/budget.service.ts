@@ -47,7 +47,7 @@ export class BudgetService {
     const localPaidDate = new Date(this.income.lastPayDate);
     const paid = new Date(localPaidDate.getUTCFullYear(), localPaidDate.getUTCMonth(), localPaidDate.getUTCDate());
     let changed = false;
-    if (Object.prototype.hasOwnProperty.call('income', this.income) && this.income.income > 0) {
+    if (Object.prototype.hasOwnProperty.call(this.income, 'income') && this.income.income > 0) {
       if (this.income.period === 'Weekly') {
         let leftover = this.income.income;
         while (paid.setUTCDate(paid.getUTCDate() + 7) < utcToday) {

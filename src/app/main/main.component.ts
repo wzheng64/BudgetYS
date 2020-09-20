@@ -14,6 +14,7 @@ export class MainComponent implements OnInit {
   ngOnInit(): void {
     if (this.budgetService.getIncome() !== undefined && this.budgetService.payIncome()) {
       this.data.storeAccounts();
+      this.data.updateIncome(this.budgetService.getIncome());
     }
   }
 }
