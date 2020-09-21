@@ -3,6 +3,7 @@ import { BudgetService } from 'src/app/shared/budget.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Category } from 'src/app/shared/category.model';
 import { Subscription } from 'rxjs';
+import { Transaction } from 'src/app/shared/transaction.model';
 
 @Component({
   selector: 'app-category-summary',
@@ -10,18 +11,18 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./category-summary.component.css']
 })
 export class CategorySummaryComponent implements OnInit, OnDestroy {
-  categories: {[s: string]: Category};
+  categories: { [s: string]: Category };
   selectedPeriod: string;
   currentDateRange: string;
   categorySub: Subscription;
   periodSub: Subscription;
   today: string = new Date().toLocaleString('sv-SE').split(' ')[0];
+  workingCategories: { [categoryid: string]: { [week: number]: Transaction[] } };
 
   constructor(private budgetService: BudgetService, private help: HelperService) { }
 
   ngOnInit(): void {
-    console.log(this.today);
-    this.categorySub = this.budgetService.catChanged.subscribe((categories: {[s: string]: Category}) => {
+    this.categorySub = this.budgetService.catChanged.subscribe((categories: { [s: string]: Category }) => {
       this.categories = categories;
     });
     this.periodSub = this.budgetService.currentPeriodChanged.subscribe((period: string) => {
@@ -31,6 +32,7 @@ export class CategorySummaryComponent implements OnInit, OnDestroy {
     this.categories = this.budgetService.getCategories();
     this.selectedPeriod = this.budgetService.getCurrentPeriod();
     this.currentDateRange = this.setDateRange(new Date());
+    this.getTransactions(this.today);
   }
 
   getTotal(): number {
@@ -46,29 +48,163 @@ export class CategorySummaryComponent implements OnInit, OnDestroy {
       const beginningOfWeek = new Date(week);
       const endOfWeek = new Date(week + 518400000);
       dateString = beginningOfWeek.getUTCMonth() + 1 + '/' + beginningOfWeek.getUTCDate() + '/' + beginningOfWeek.getUTCFullYear()
-                   + ' - ' + (endOfWeek.getUTCMonth() + 1) + '/' + endOfWeek.getUTCDate() + '/' + endOfWeek.getUTCFullYear();
+        + ' - ' + (endOfWeek.getUTCMonth() + 1) + '/' + endOfWeek.getUTCDate() + '/' + endOfWeek.getUTCFullYear();
     }
     else if (this.selectedPeriod === 'Bi-Weekly') {
       const week = this.help.getWeek(date);
       const beginningOfWeek = new Date(week);
       const endOfWeek = new Date(week + 1123000000);
-      dateString = beginningOfWeek.getUTCMonth() + 1  + '/' + beginningOfWeek.getUTCDate() + '/' + beginningOfWeek.getUTCFullYear()
-                   + ' - ' + (endOfWeek.getUTCMonth() + 1)  + '/' + endOfWeek.getUTCDate() + '/' + endOfWeek.getUTCFullYear();
+      dateString = beginningOfWeek.getUTCMonth() + 1 + '/' + beginningOfWeek.getUTCDate() + '/' + beginningOfWeek.getUTCFullYear()
+        + ' - ' + (endOfWeek.getUTCMonth() + 1) + '/' + endOfWeek.getUTCDate() + '/' + endOfWeek.getUTCFullYear();
     }
     else {
       const selectedDate = new Date(date);
       const beginningOfMonth = new Date(Date.UTC(selectedDate.getUTCFullYear(), selectedDate.getUTCMonth()));
       const endOfMonth = new Date(Date.UTC(beginningOfMonth.getUTCFullYear(), beginningOfMonth.getUTCMonth() + 1));
-      dateString = beginningOfMonth.getUTCMonth() + 1  + '/' + beginningOfMonth.getUTCDate() + '/' + beginningOfMonth.getUTCFullYear()
-      + ' - ' + (endOfMonth.getUTCMonth() + 1)  + '/' + endOfMonth.getUTCDate() + '/' + endOfMonth.getUTCFullYear();
+      dateString = beginningOfMonth.getUTCMonth() + 1 + '/' + beginningOfMonth.getUTCDate() + '/' + beginningOfMonth.getUTCFullYear()
+        + ' - ' + (endOfMonth.getUTCMonth() + 1) + '/' + endOfMonth.getUTCDate() + '/' + endOfMonth.getUTCFullYear();
     }
-    console.log(this.selectedPeriod);
-    console.log(dateString);
     return dateString;
   }
 
   changeDate(date: string): void {
     this.currentDateRange = this.setDateRange(date);
+    this.getTransactions(date);
+  }
+
+  // This method will use the current date period to get all transactions that fall within this date
+  private getTransactions(date: string): void {
+    this.workingCategories = {};
+    // Only need to get the one week's worth of transaction
+    if (this.selectedPeriod === 'Weekly') {
+      const week = this.help.getWeek(date);
+      for (const categoryid in this.categories) {
+        if (Object.prototype.hasOwnProperty.call(this.categories, categoryid)) {
+          const transactions = this.categories[categoryid].transactions;
+          this.workingCategories[categoryid] = {};
+          if (transactions && transactions !== undefined && Object.keys(transactions).length > 0) {
+            if (Object.prototype.hasOwnProperty.call(transactions, week)) {
+              if (!Object.prototype.hasOwnProperty.call(this.workingCategories[categoryid], week)) {
+                this.workingCategories[categoryid][week] = [];
+              }
+              for (const transactionid in transactions[week]) {
+                if (Object.prototype.hasOwnProperty.call(transactions[week], transactionid)) {
+                  this.workingCategories[categoryid][week].push(transactions[week][transactionid]);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    else if (this.selectedPeriod === 'Bi-Weekly') {
+      const week = this.help.getWeek(date);
+      const week2 = week + 604800000;
+      for (const categoryid in this.categories) { // For every category
+        if (Object.prototype.hasOwnProperty.call(this.categories, categoryid)) {
+          const transactions = this.categories[categoryid].transactions; // Grab the transactions of that category
+          this.workingCategories[categoryid] = {}; // Create an empty object to store transactions
+          if (transactions && transactions !== undefined && Object.keys(transactions).length > 0) { // Make sure there are transactions
+            if (Object.prototype.hasOwnProperty.call(transactions, week)) {
+              if (!Object.prototype.hasOwnProperty.call(this.workingCategories[categoryid], week)) {
+                this.workingCategories[categoryid][week] = [];
+              }
+              for (const transactionid in transactions[week]) {
+                if (Object.prototype.hasOwnProperty.call(transactions[week], transactionid)) {
+                  this.workingCategories[categoryid][week].push(transactions[week][transactionid]);
+                }
+              }
+            }
+            // Grabbing transactions for the second week as well
+            if (Object.prototype.hasOwnProperty.call(transactions, week2)) {
+              if (!Object.prototype.hasOwnProperty.call(this.workingCategories[categoryid], week2)) {
+                this.workingCategories[categoryid][week2] = [];
+              }
+              for (const transactionid in transactions[week2]) {
+                if (Object.prototype.hasOwnProperty.call(transactions[week2], transactionid)) {
+                  this.workingCategories[categoryid][week2].push(transactions[week2][transactionid]);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    else {
+      const selectedDate = new Date(date);
+      const beginningOfMonth = new Date(Date.UTC(selectedDate.getUTCFullYear(), selectedDate.getUTCMonth()));
+      const endOfMonth = new Date(Date.UTC(beginningOfMonth.getUTCFullYear(), beginningOfMonth.getUTCMonth() + 1));
+      const week1 = this.help.getWeek(beginningOfMonth);
+      const lastWeek = this.help.getWeek(endOfMonth);
+      const weeks = [week1];
+      for (let index = 1; index < 6; index++) {
+        weeks.push(week1 + 604800000 * index);
+      }
+      if (weeks[weeks.length - 1] !== lastWeek) {
+        weeks.pop();
+      }
+      // Weeks should now contain all the weeks that are in the month
+      // The first and last week need to be manually searched for transactions that are within the proper month
+      // Millisecond representations of the first day of the month and the first day of next month
+      const beginningOfMonthms = Date.UTC(selectedDate.getUTCFullYear(), selectedDate.getUTCMonth());
+      const endOfMonthms = Date.UTC(beginningOfMonth.getUTCFullYear(), beginningOfMonth.getUTCMonth() + 1);
+      for (const categoryid in this.categories) { // For every category
+        if (Object.prototype.hasOwnProperty.call(this.categories, categoryid)) {
+          const transactions = this.categories[categoryid].transactions; // Grab the transactions of that category
+          this.workingCategories[categoryid] = {}; // Create an empty object to store transactions
+          if (transactions && transactions !== undefined && Object.keys(transactions).length > 0) { // Make sure there are transactions
+            let week = weeks[0];
+            if (Object.prototype.hasOwnProperty.call(transactions, week)) {
+              if (!Object.prototype.hasOwnProperty.call(this.workingCategories[categoryid], week)) {
+                this.workingCategories[categoryid][week] = [];
+              }
+              for (const transactionid in transactions[week]) {
+                if (Object.prototype.hasOwnProperty.call(transactions[week], transactionid)) {
+                  const transaction = transactions[week][transactionid];
+                  const transactionDate = Date.UTC(new Date(transaction.date).getUTCFullYear(),
+                                                   new Date(transaction.date).getUTCMonth(),
+                                                   new Date(transaction.date).getUTCDate());
+                  if (transactionDate >= beginningOfMonthms) {
+                    this.workingCategories[categoryid][week].push(transactions[week][transactionid]);
+                  }
+                }
+              }
+            }
+            for (let index = 1; index < weeks.length - 1; index++) {
+              week = weeks[index];
+              if (Object.prototype.hasOwnProperty.call(transactions, week)) {
+                if (!Object.prototype.hasOwnProperty.call(this.workingCategories[categoryid], week)) {
+                  this.workingCategories[categoryid][week] = [];
+                }
+                for (const transactionid in transactions[week]) {
+                  if (Object.prototype.hasOwnProperty.call(transactions[week], transactionid)) {
+                    this.workingCategories[categoryid][week].push(transactions[week][transactionid]);
+                  }
+                }
+              }
+            }
+            week = weeks[weeks.length - 1];
+            if (Object.prototype.hasOwnProperty.call(transactions, week)) {
+              if (!Object.prototype.hasOwnProperty.call(this.workingCategories[categoryid], week)) {
+                this.workingCategories[categoryid][week] = [];
+              }
+              for (const transactionid in transactions[week]) {
+                if (Object.prototype.hasOwnProperty.call(transactions[week], transactionid)) {
+                  const transaction = transactions[week][transactionid];
+                  const transactionDate = Date.UTC(new Date(transaction.date).getUTCFullYear(),
+                                                   new Date(transaction.date).getUTCMonth(),
+                                                   new Date(transaction.date).getUTCDate());
+                  if (transactionDate < endOfMonthms) {
+                    this.workingCategories[categoryid][week].push(transactions[week][transactionid]);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    console.log(this.workingCategories);
   }
 
   ngOnDestroy(): void {
