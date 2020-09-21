@@ -4,6 +4,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Category } from 'src/app/shared/category.model';
 import { Subscription } from 'rxjs';
 import { Transaction } from 'src/app/shared/transaction.model';
+import { ChartType, ChartOptions } from 'chart.js';
+import { Label } from 'ng2-charts';
 
 @Component({
   selector: 'app-category-summary',
@@ -18,6 +20,15 @@ export class CategorySummaryComponent implements OnInit, OnDestroy {
   periodSub: Subscription;
   today: string = new Date().toLocaleString('sv-SE').split(' ')[0];
   workingCategories: { [categoryid: string]: { [week: number]: Transaction[] } };
+  graphData: {
+    numbers: number[],
+    labels: Label[],
+    colors: {backgroundColor: string[]}
+  } = {
+    numbers: [],
+    labels: [],
+    colors: {backgroundColor: []}
+  };
 
   constructor(private budgetService: BudgetService, private help: HelperService) { }
 
@@ -84,6 +95,7 @@ export class CategorySummaryComponent implements OnInit, OnDestroy {
         + ' - ' + (endOfMonth.getUTCMonth() + 1) + '/' + endOfMonth.getUTCDate() + '/' + endOfMonth.getUTCFullYear();
     }
     this.getTransactions(date);
+    this.setGraphData();
     return dateString;
   }
 
@@ -222,6 +234,27 @@ export class CategorySummaryComponent implements OnInit, OnDestroy {
             }
           }
         }
+      }
+    }
+  }
+
+  private setGraphData(): void {
+    for (const categoryid in this.workingCategories) {
+      if (Object.prototype.hasOwnProperty.call(this.workingCategories, categoryid)) {
+        // Get the amount spent in that category
+        let totalSpent = 0;
+        const category = this.workingCategories[categoryid];
+        for (const week in category) {
+          if (Object.prototype.hasOwnProperty.call(category, week)) {
+            const transactions = category[week];
+            transactions.forEach((transaction: Transaction) => {
+              totalSpent += transaction.amount;
+            });
+          }
+        }
+        this.graphData.numbers.push(totalSpent);
+        // Get the name for the label
+        this.graphData.labels.push(this.categories[categoryid].name);
       }
     }
   }

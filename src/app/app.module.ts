@@ -4,6 +4,7 @@ import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinne
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { ChartsModule } from 'ng2-charts';
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -63,7 +64,8 @@ import { CategorySummaryComponent } from './budget/category-summary/category-sum
     ReactiveFormsModule,
     FormsModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    ChartsModule
   ],
   providers: [{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptorService, multi: true}],
   bootstrap: [AppComponent]
