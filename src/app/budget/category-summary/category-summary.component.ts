@@ -18,17 +18,15 @@ export class CategorySummaryComponent implements OnInit, OnDestroy {
   currentDateRange: string;
   categorySub: Subscription;
   periodSub: Subscription;
-  today: string = new Date().toLocaleString('sv-SE').split(' ')[0];
+  selectedDate: string;
   workingCategories: { [categoryid: string]: { [week: number]: Transaction[] } };
   graphData: {
     numbers: number[],
     labels: Label[],
-    colors: {backgroundColor: string[]}
-  } = {
-    numbers: [],
-    labels: [],
-    colors: {backgroundColor: []}
+    colors: { backgroundColor: string[] },
+    options: ChartOptions
   };
+  topFive: Transaction[];
 
   constructor(private budgetService: BudgetService, private help: HelperService) { }
 
@@ -38,11 +36,23 @@ export class CategorySummaryComponent implements OnInit, OnDestroy {
     });
     this.periodSub = this.budgetService.currentPeriodChanged.subscribe((period: string) => {
       this.selectedPeriod = period;
-      this.currentDateRange = this.setDateRange(new Date());
+      if (localStorage.getItem('selectedDate')) {
+        this.currentDateRange = this.setDateRange(localStorage.getItem('selectedDate'));
+      }
+      else {
+        this.currentDateRange = this.setDateRange(new Date());
+      }
     });
     this.categories = this.budgetService.getCategories();
     this.selectedPeriod = this.budgetService.getCurrentPeriod();
-    this.currentDateRange = this.setDateRange(new Date());
+    if (localStorage.getItem('selectedDate')) {
+      this.currentDateRange = this.setDateRange(localStorage.getItem('selectedDate'));
+      this.selectedDate = localStorage.getItem('selectedDate');
+    }
+    else {
+      this.currentDateRange = this.setDateRange(new Date());
+      this.selectedDate = new Date().toLocaleString('sv-SE').split(' ')[0];
+    }
   }
 
   getTotalSpent(): number {
@@ -95,17 +105,18 @@ export class CategorySummaryComponent implements OnInit, OnDestroy {
         + ' - ' + (endOfMonth.getUTCMonth() + 1) + '/' + endOfMonth.getUTCDate() + '/' + endOfMonth.getUTCFullYear();
     }
     this.getTransactions(date);
-    this.setGraphData();
+    this.setPieChart();
+    this.getTopFive();
     return dateString;
   }
 
   changeDate(date: string): void {
     this.currentDateRange = this.setDateRange(date);
+    localStorage.setItem('selectedDate', date);
   }
 
   // This method will use the current date period to get all transactions that fall within this date
   private getTransactions(date: string | Date): void {
-    console.log('Grabbing!');
     this.workingCategories = {};
     // Only need to get the one week's worth of transaction
     if (this.selectedPeriod === 'Weekly') {
@@ -194,8 +205,8 @@ export class CategorySummaryComponent implements OnInit, OnDestroy {
                 if (Object.prototype.hasOwnProperty.call(transactions[week], transactionid)) {
                   const transaction = transactions[week][transactionid];
                   const transactionDate = Date.UTC(new Date(transaction.date).getUTCFullYear(),
-                                                   new Date(transaction.date).getUTCMonth(),
-                                                   new Date(transaction.date).getUTCDate());
+                    new Date(transaction.date).getUTCMonth(),
+                    new Date(transaction.date).getUTCDate());
                   if (transactionDate >= beginningOfMonthms) {
                     this.workingCategories[categoryid][week].push(transactions[week][transactionid]);
                   }
@@ -224,8 +235,8 @@ export class CategorySummaryComponent implements OnInit, OnDestroy {
                 if (Object.prototype.hasOwnProperty.call(transactions[week], transactionid)) {
                   const transaction = transactions[week][transactionid];
                   const transactionDate = Date.UTC(new Date(transaction.date).getUTCFullYear(),
-                                                   new Date(transaction.date).getUTCMonth(),
-                                                   new Date(transaction.date).getUTCDate());
+                    new Date(transaction.date).getUTCMonth(),
+                    new Date(transaction.date).getUTCDate());
                   if (transactionDate < endOfMonthms) {
                     this.workingCategories[categoryid][week].push(transactions[week][transactionid]);
                   }
@@ -238,7 +249,13 @@ export class CategorySummaryComponent implements OnInit, OnDestroy {
     }
   }
 
-  private setGraphData(): void {
+  private setPieChart(): void {
+    this.graphData = {
+      numbers: [],
+      labels: [],
+      colors: { backgroundColor: [] },
+      options: {}
+    };
     for (const categoryid in this.workingCategories) {
       if (Object.prototype.hasOwnProperty.call(this.workingCategories, categoryid)) {
         // Get the amount spent in that category
@@ -257,6 +274,23 @@ export class CategorySummaryComponent implements OnInit, OnDestroy {
         this.graphData.labels.push(this.categories[categoryid].name);
       }
     }
+  }
+
+  private getTopFive(): void {
+    const transactions: Transaction[] = [];
+    for (const categoryid in this.workingCategories) {
+      if (Object.prototype.hasOwnProperty.call(this.workingCategories, categoryid)) {
+        for (const week in this.workingCategories[categoryid]) {
+          if (Object.prototype.hasOwnProperty.call(this.workingCategories[categoryid], week)) {
+            this.workingCategories[categoryid][week].forEach((transaction: Transaction) => {
+              transactions.push(transaction);
+            });
+          }
+        }
+      }
+    }
+    transactions.sort((a, b) => b.amount - a.amount);
+    this.topFive = transactions.slice(0, 5);
   }
 
   ngOnDestroy(): void {
