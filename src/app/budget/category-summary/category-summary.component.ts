@@ -32,12 +32,31 @@ export class CategorySummaryComponent implements OnInit, OnDestroy {
     this.categories = this.budgetService.getCategories();
     this.selectedPeriod = this.budgetService.getCurrentPeriod();
     this.currentDateRange = this.setDateRange(new Date());
-    this.getTransactions(this.today);
   }
 
-  getTotal(): number {
+  getTotalSpent(): number {
     let total = 0;
+    for (const categoryid in this.workingCategories) {
+      if (Object.prototype.hasOwnProperty.call(this.workingCategories, categoryid)) {
+        for (const week in this.workingCategories[categoryid]) {
+          if (Object.prototype.hasOwnProperty.call(this.workingCategories[categoryid], week)) {
+            this.workingCategories[categoryid][week].forEach((transaction: Transaction) => {
+              total += transaction.amount;
+            });
+          }
+        }
+      }
+    }
+    return total;
+  }
 
+  getTotalBudget(): number {
+    let total = 0;
+    for (const categoryid in this.categories) {
+      if (Object.prototype.hasOwnProperty.call(this.categories, categoryid)) {
+        total += this.categories[categoryid].amount * this.help.periodRatio(this.selectedPeriod, this.categories[categoryid].period);
+      }
+    }
     return total;
   }
 
@@ -64,16 +83,17 @@ export class CategorySummaryComponent implements OnInit, OnDestroy {
       dateString = beginningOfMonth.getUTCMonth() + 1 + '/' + beginningOfMonth.getUTCDate() + '/' + beginningOfMonth.getUTCFullYear()
         + ' - ' + (endOfMonth.getUTCMonth() + 1) + '/' + endOfMonth.getUTCDate() + '/' + endOfMonth.getUTCFullYear();
     }
+    this.getTransactions(date);
     return dateString;
   }
 
   changeDate(date: string): void {
     this.currentDateRange = this.setDateRange(date);
-    this.getTransactions(date);
   }
 
   // This method will use the current date period to get all transactions that fall within this date
-  private getTransactions(date: string): void {
+  private getTransactions(date: string | Date): void {
+    console.log('Grabbing!');
     this.workingCategories = {};
     // Only need to get the one week's worth of transaction
     if (this.selectedPeriod === 'Weekly') {
@@ -204,7 +224,6 @@ export class CategorySummaryComponent implements OnInit, OnDestroy {
         }
       }
     }
-    console.log(this.workingCategories);
   }
 
   ngOnDestroy(): void {
