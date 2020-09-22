@@ -151,7 +151,7 @@ export class BudgetService {
   addTransaction(trans: Transaction): void {
     const categoryid = trans.category;
     const week = this.help.getWeek(trans.date);
-    if (!this.categories[categoryid].transactions[week]) {
+    if (this.categories[categoryid].transactions[week] === undefined) {
       this.categories[categoryid].transactions[week] = {};
     }
     this.categories[categoryid].transactions[week][trans.id] = trans;
@@ -160,7 +160,9 @@ export class BudgetService {
 
   deleteTransaction(trans: Transaction): void {
     const week = this.help.getWeek(trans.date);
-    delete this.categories[trans.category].transactions[week][trans.id];
+    if (this.categories[trans.category].transactions[week] !== undefined) {
+      delete this.categories[trans.category].transactions[week][trans.id];
+    }
     this.catChanged.next({ ... this.categories });
   }
 }

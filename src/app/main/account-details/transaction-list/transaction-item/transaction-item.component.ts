@@ -14,8 +14,8 @@ import { Category } from 'src/app/shared/category.model';
   styleUrls: ['./transaction-item.component.css']
 })
 export class TransactionItemComponent implements OnInit, OnDestroy {
-  @Input()transaction: Transaction;
-  @Input()index: number;
+  @Input() transaction: Transaction;
+  @Input() index: number;
   showDescription = false;
   editMode = false;
   transactionForm: FormGroup;
@@ -55,7 +55,7 @@ export class TransactionItemComponent implements OnInit, OnDestroy {
       date: new FormControl(this.transaction.date),
       description: new FormControl(this.transaction.description),
       amount: new FormControl(this.transaction.amount, [Validators.required, Validators.pattern(/^((0\.[0-9][1-9])|([1-9][0-9]*(\.[0-9]{2})?))$/),
-                                 Validators.min(0.01)]),
+      Validators.min(0.01)]),
       type: new FormControl(this.transaction.type, Validators.required),
       category: new FormControl(this.transaction.category)
     });
@@ -64,7 +64,7 @@ export class TransactionItemComponent implements OnInit, OnDestroy {
   onDelete(): void {
     this.accountService.deleteTransaction(this.route.snapshot.params.id, this.transaction.id, this.transaction.date);
     console.log(this.budgetService.getCategories());
-    if (this.transaction.category) {
+    if (this.transaction.category !== undefined) {
       this.budgetService.deleteTransaction(this.transaction);
       this.db.updateCategoryTransactions(this.transaction);
     }
@@ -78,24 +78,18 @@ export class TransactionItemComponent implements OnInit, OnDestroy {
     this.transactionForm.value.amount = Number(this.transactionForm.value.amount);
     const accID = this.route.snapshot.params.id;
     this.accountService.updateTransaction(accID, this.transactionForm.value, this.transaction.id, this.transaction.date);
-    // If something has changed with the category, update accordingly
-    if (this.transactionForm.value.category !== this.transaction.category) {
-      // If we switched into a new category, update accordingly
-      if (this.transactionForm.value.category) {
-        // Check if the previous selection was a category, otherwise we don't need to delete
-        if (this.transaction.category) {
-          this.budgetService.deleteTransaction(this.transaction);
-          this.db.updateCategoryTransactions(this.transaction);
-        }
-        this.budgetService.addTransaction({... this.transactionForm.value, id: this.transaction.id});
-        this.db.updateCategoryTransactions({... this.transactionForm.value, id: this.transaction.id});
-      }
-      else {
-        // The user may choose to remove the transaction from a category
-        // The transaction should then be removed from the old category
-        this.budgetService.deleteTransaction(this.transaction);
-        this.db.updateCategoryTransactions(this.transaction);
-      }
+
+    // Need to update the transaction in the categories
+
+    // If the old transaction was in a category it needs to be deleted
+    if (this.transaction.category !== undefined) {
+      this.budgetService.deleteTransaction(this.transaction);
+      this.db.updateCategoryTransactions(this.transaction);
+    }
+    // If the edited transaction belongs to a category, it needs to be updated/added
+    if (this.transactionForm.value.category !== undefined) {
+      this.budgetService.addTransaction({... this.transactionForm.value, id: this.transaction.id});
+      this.db.updateCategoryTransactions({... this.transactionForm.value, id: this.transaction.id});
     }
     this.db.updateTransactions(accID);
   }

@@ -4,7 +4,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Category } from 'src/app/shared/category.model';
 import { Subscription } from 'rxjs';
 import { Transaction } from 'src/app/shared/transaction.model';
-import { ChartType, ChartOptions } from 'chart.js';
+import { ChartOptions, ChartDataSets } from 'chart.js';
 import { Label } from 'ng2-charts';
 
 @Component({
@@ -23,10 +23,14 @@ export class CategorySummaryComponent implements OnInit, OnDestroy {
   graphData: {
     numbers: number[],
     labels: Label[],
-    colors: { backgroundColor: string[] },
     options: ChartOptions
   };
   topFive: Transaction[];
+  barChartData: {
+    numbers: ChartDataSets[],
+    labels: Label[],
+    options: ChartOptions
+  };
 
   constructor(private budgetService: BudgetService, private help: HelperService) { }
 
@@ -107,6 +111,7 @@ export class CategorySummaryComponent implements OnInit, OnDestroy {
     this.getTransactions(date);
     this.setPieChart();
     this.getTopFive();
+    this.setBarChart();
     return dateString;
   }
 
@@ -253,7 +258,6 @@ export class CategorySummaryComponent implements OnInit, OnDestroy {
     this.graphData = {
       numbers: [],
       labels: [],
-      colors: { backgroundColor: [] },
       options: {}
     };
     for (const categoryid in this.workingCategories) {
@@ -291,6 +295,38 @@ export class CategorySummaryComponent implements OnInit, OnDestroy {
     }
     transactions.sort((a, b) => b.amount - a.amount);
     this.topFive = transactions.slice(0, 5);
+  }
+
+  private setBarChart(): void {
+    this.barChartData = {
+      numbers: [{barPercentage: 0.8, barThickness: 15, maxBarThickness: 15, minBarLength: 2, data: []}],
+      labels: [],
+      options: {
+        legend: {
+          display: false
+        }
+      }
+    };
+    for (const categoryid in this.workingCategories) {
+      if (Object.prototype.hasOwnProperty.call(this.workingCategories, categoryid)) {
+        // Get the amount spent in that category
+        let totalSpent = 0;
+        const category = this.workingCategories[categoryid];
+        for (const week in category) {
+          if (Object.prototype.hasOwnProperty.call(category, week)) {
+            const transactions = category[week];
+            transactions.forEach((transaction: Transaction) => {
+              totalSpent += transaction.amount;
+            });
+          }
+        }
+        const budget = this.categories[categoryid].amount * this.help.periodRatio(this.selectedPeriod, this.categories[categoryid].period);
+        if (totalSpent > budget) {
+          this.barChartData.numbers[0].data.push(totalSpent - budget);
+          this.barChartData.labels.push(this.categories[categoryid].name);
+        }
+      }
+    }
   }
 
   ngOnDestroy(): void {
