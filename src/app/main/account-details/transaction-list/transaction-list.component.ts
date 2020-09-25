@@ -1,7 +1,7 @@
 import { ActivatedRoute, Params } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AccountService } from 'src/app/shared/account.service';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { Transaction } from 'src/app/shared/transaction.model';
 
 @Component({
@@ -10,7 +10,7 @@ import { Transaction } from 'src/app/shared/transaction.model';
   styleUrls: ['./transaction-list.component.css']
 })
 export class TransactionListComponent implements OnInit, OnDestroy {
-  transactions: Transaction[];
+  @Input()transactions: Transaction[];
   transSub: Subscription;
   pSub: Subscription;
 
@@ -21,7 +21,9 @@ export class TransactionListComponent implements OnInit, OnDestroy {
       this.loadTransactions(trans);
     });
     this.pSub = this.route.params.subscribe((params: Params) => {
-      this.loadTransactions(this.accountService.getTransactions(params.id));
+      if ('accountid' in params) {
+        this.loadTransactions(this.accountService.getTransactions(params.accountid));
+      }
     });
   }
 

@@ -20,7 +20,7 @@ export class AccountDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params ) => {
-      this.index = params.id;
+      this.index = params.accountid;
       this.account = this.accountService.getAccountById(this.index);
     });
   }

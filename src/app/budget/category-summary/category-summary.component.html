@@ -23,6 +23,15 @@
       <h4>You have spent a total of ${{getTotalSpent()}} out of a total budgeted amount of ${{getTotalBudget()}}</h4>
     </div>
   </div>
+  <div class="row justify-content-center" *ngIf="getTotalSpent()-getTotalBudget() > 0">
+    <div class="col-8 text-center">
+      <div class="card" style="background-color:#E6C229">
+        <div class="card-header">
+          <h3 style="color:#AF3800">You are ${{(getTotalSpent()-getTotalBudget()).toFixed(2)}} over budget!</h3>
+        </div>
+      </div>
+    </div>
+  </div>
   <hr>
   <div class="row">
     <div class="col-8">

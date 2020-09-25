@@ -29,7 +29,7 @@ const appRoutes: Routes = [
       { path: '', component: AccountDetailsComponent },
       { path: 'new', component: AccountEditComponent },
       {
-        path: ':id', component: AccountDetailsComponent, resolve: [CategoryResolverService], children: [
+        path: ':accountid', component: AccountDetailsComponent, resolve: [CategoryResolverService], children: [
           { path: 'new', component: TransactionNewComponent },
           { path: 'edit', component: AccountEditComponent }
         ]
@@ -41,7 +41,7 @@ const appRoutes: Routes = [
       { path: '', component: CategorySummaryComponent },
       { path: 'new', component: CategoryEditComponent },
       { path: 'income', component: IncomeEditComponent },
-      { path: ':id', component: CategoryDetailsComponent }
+      { path: ':categoryid', component: CategoryDetailsComponent }
     ]
   },
   { path: 'auth', component: AuthComponent, canActivate: [AuthRedirectGuard] }

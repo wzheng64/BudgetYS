@@ -30,7 +30,7 @@ export class CategoryItemComponent implements OnInit, OnDestroy {
     if (period === 'Week') {
       den = 1;
     }
-    else if (period === '2 weeks') {
+    else if (period === '2 Weeks') {
       den = 2;
     }
     else if (period === 'Month') {

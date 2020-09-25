@@ -1,7 +1,7 @@
 import { Subscription } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DataStorageService } from './../../../../shared/data-storage.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { AccountService } from 'src/app/shared/account.service';
 import { Transaction } from './../../../../shared/transaction.model';
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
@@ -20,6 +20,7 @@ export class TransactionItemComponent implements OnInit, OnDestroy {
   editMode = false;
   transactionForm: FormGroup;
   categories: { [s: string]: string }[];
+  accountid: string;
   catSub: Subscription;
 
   constructor(private accountService: AccountService, private route: ActivatedRoute,
@@ -34,6 +35,9 @@ export class TransactionItemComponent implements OnInit, OnDestroy {
           this.categories.push({ name: cat.name, id: cat.id });
         }
       }
+    });
+    this.route.params.subscribe((params: Params) => {
+      this.accountid = params.accountid;
     });
     this.categories = [];
     const categories = this.budgetService.getCategories();
@@ -62,22 +66,18 @@ export class TransactionItemComponent implements OnInit, OnDestroy {
   }
 
   onDelete(): void {
-    this.accountService.deleteTransaction(this.route.snapshot.params.id, this.transaction.id, this.transaction.date);
-    console.log(this.budgetService.getCategories());
+    this.accountService.deleteTransaction(this.accountid, this.transaction.id, this.transaction.date);
     if (this.transaction.category !== undefined) {
       this.budgetService.deleteTransaction(this.transaction);
       this.db.updateCategoryTransactions(this.transaction);
     }
-    this.db.updateTransactions(this.route.snapshot.params.id);
+    this.db.updateTransactions(this.accountid);
   }
 
   onSubmit(): void {
-    console.log(this.transaction);
-    console.log(this.transactionForm.value);
     this.editMode = false;
     this.transactionForm.value.amount = Number(this.transactionForm.value.amount);
-    const accID = this.route.snapshot.params.id;
-    this.accountService.updateTransaction(accID, this.transactionForm.value, this.transaction.id, this.transaction.date);
+    this.accountService.updateTransaction(this.accountid, this.transactionForm.value, this.transaction.id, this.transaction.date);
 
     // Need to update the transaction in the categories
 
@@ -91,7 +91,7 @@ export class TransactionItemComponent implements OnInit, OnDestroy {
       this.budgetService.addTransaction({... this.transactionForm.value, id: this.transaction.id});
       this.db.updateCategoryTransactions({... this.transactionForm.value, id: this.transaction.id});
     }
-    this.db.updateTransactions(accID);
+    this.db.updateTransactions(this.accountid);
   }
 
   onCancel(): void {

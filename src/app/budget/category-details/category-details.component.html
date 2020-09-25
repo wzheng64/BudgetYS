@@ -10,6 +10,32 @@
         </button>
       </div>
       <h4 class="text-center">{{category.name}}</h4>
+      <h5 class="text-center">${{category.formatBalance()}} every {{category.period}}</h5>
+      <div class="row">
+        <div class="col align-self-center">
+          <h2 class="text-center">Selected {{category.period}}</h2>
+          <h3 class="text-center">{{currentDateRange}}</h3>
+          <div class="row justify-content-center">
+            <div class="col-4">
+              <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" id="date" class="form-control" [value]="selectedDate" (change)="changeDate($event.target.value)">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col text-center">
+          <h5>{{category.period == '2 Weeks' ? 'In these' : 'In this' }} {{category.period}} you spent ${{getTotal()}} out of ${{category.formatBalance()}}</h5>
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-6" *ngIf="transactions.length != 0">
+          <app-transaction-list [transactions]="transactions"></app-transaction-list>
+        </div>
+      </div>
     </div>
   </div>
 </div>

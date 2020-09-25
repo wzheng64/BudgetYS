@@ -304,6 +304,21 @@ export class CategorySummaryComponent implements OnInit, OnDestroy {
       options: {
         legend: {
           display: false
+        },
+        scales: {
+          xAxes: [
+            {
+              scaleLabel: {display: true, labelString: 'Category', fontColor: 'white', fontSize: 20},
+              ticks: {fontColor: 'white', fontSize: 16}
+            }
+          ],
+          yAxes: [
+            {
+              display: true,
+              ticks: {beginAtZero: true, fontColor: 'white'},
+              scaleLabel: {display: true, labelString: 'Dollars over budget', fontColor: 'white', fontSize: 20}
+            }
+          ]
         }
       }
     };

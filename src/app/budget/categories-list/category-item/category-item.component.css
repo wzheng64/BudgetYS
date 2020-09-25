@@ -1,14 +1,15 @@
-.account:hover {
+.category:hover {
   text-decoration: none;
-  background: #CED0CE;
+  background: #E6C229;
+  color: #2E4057;
 }
 
-.account.active {
-  background-color: #bdc0bd;
-  color: #6C0E23;
+.category.active {
+  background-color: #E6C229;
+  color: #2E4057;
 }
 
-.account {
-  background-color: #E6E8E6;
-  color: #3F403F;
+.category {
+  background-color: #AF3800;
+  color: white;
 }
