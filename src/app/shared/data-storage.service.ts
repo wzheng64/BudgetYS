@@ -63,6 +63,11 @@ export class DataStorageService {
       );
   }
 
+  deleteAccount(accountid: string): void {
+    this.http.delete(`https://budgetys-9ff7a.firebaseio.com/users/${this.authService.user.value.id}/accounts/${accountid}.json`)
+    .subscribe();
+  }
+
   /* Methods based on the transactions of accounts */
 
   updateTransactions(accID: string): void {
@@ -183,6 +188,11 @@ export class DataStorageService {
       category)
       .subscribe(res => console.log(res));
     }
+  }
+
+  deleteCategory(categoryid: string): void {
+    this.http.delete(`https://budgetys-9ff7a.firebaseio.com/users/${this.authService.user.value.id}/categories/${categoryid}.json`)
+    .subscribe();
   }
 
   /* Below are methods that handle transactions for categories */

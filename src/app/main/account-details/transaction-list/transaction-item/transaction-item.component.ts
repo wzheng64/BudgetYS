@@ -82,12 +82,12 @@ export class TransactionItemComponent implements OnInit, OnDestroy {
     // Need to update the transaction in the categories
 
     // If the old transaction was in a category it needs to be deleted
-    if (this.transaction.category !== undefined) {
+    if (this.transaction.category !== undefined && this.budgetService.checkCategory(this.transaction.category)) {
       this.budgetService.deleteTransaction(this.transaction);
       this.db.updateCategoryTransactions(this.transaction);
     }
     // If the edited transaction belongs to a category, it needs to be updated/added
-    if (this.transactionForm.value.category !== undefined) {
+    if (this.transactionForm.value.category !== undefined  && this.budgetService.checkCategory(this.transactionForm.value.category)) {
       this.budgetService.addTransaction({... this.transactionForm.value, id: this.transaction.id});
       this.db.updateCategoryTransactions({... this.transactionForm.value, id: this.transaction.id});
     }

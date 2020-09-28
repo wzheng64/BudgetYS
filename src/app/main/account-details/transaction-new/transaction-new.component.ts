@@ -56,7 +56,7 @@ export class TransactionNewComponent implements OnInit, OnDestroy {
     const transactionid = this.idService.generateTrans();
     this.transactionForm.value.amount = Number(this.transactionForm.value.amount);
     this.transactionForm.value.id = transactionid;
-    const accID = this.route.snapshot.params.id;
+    const accID = this.route.snapshot.params.accountid;
     this.accountService.addTransaction(accID, this.transactionForm.value);
     if (this.transactionForm.value.category) {
       this.budgetService.addTransaction(this.transactionForm.value);

@@ -123,8 +123,8 @@ export class BudgetService {
   }
 
   addCategory(cat: Category): void {
-    this.categories[cat.id] = cat;
-    this.catChanged.next(this.categories);
+    this.categories[cat.id] = new Category(cat.name, cat.transactions, cat.amount, cat.id, cat.period, cat.subCategories);
+    this.catChanged.next({... this.categories});
   }
 
   getCategory(categoryid: string): Category {
@@ -137,6 +137,16 @@ export class BudgetService {
 
   setCategories(cats: { [s: string]: Category }): void {
     this.categories = cats;
+  }
+
+  checkCategory(categoryid: string): boolean {
+    return categoryid in this.categories;
+  }
+
+  deleteCategory(categoryid: string): void {
+    this.idService.deleteCat(categoryid);
+    delete this.categories[categoryid];
+    this.catChanged.next({... this.categories});
   }
 
   getCurrentPeriod(): string {

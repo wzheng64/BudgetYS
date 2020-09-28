@@ -62,7 +62,7 @@ export class AccountService {
     const week = this.help.getWeek(trans.date);
     const realTrans = new Transaction(trans.name, trans.date, trans.description,
                                       trans.amount, trans.type, trans.id, trans.category);
-    if (!this.accounts[accID].transactions[week]) {
+    if (!(week in this.accounts[accID].transactions)) {
       this.accounts[accID].transactions[week] = {};
     }
     this.accounts[accID].transactions[week][realTrans.id] = realTrans;

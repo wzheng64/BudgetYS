@@ -41,7 +41,7 @@ export class AccountDetailsComponent implements OnInit {
     }
     this.accountService.deleteAccount(this.index);
     this.router.navigate(['../'], {relativeTo: this.route});
-    this.db.storeAccounts();
+    this.db.deleteAccount(this.index);
   }
 
 }

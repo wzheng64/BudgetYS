@@ -1,3 +1,4 @@
+import { DataStorageService } from './../../shared/data-storage.service';
 import { HelperService } from './../../shared/helper.service';
 import { Category } from './../../shared/category.model';
 import { BudgetService } from 'src/app/shared/budget.service';
@@ -17,10 +18,11 @@ export class CategoryDetailsComponent implements OnInit {
   currentDateRange: string;
   selectedDate: string;
   transactions: Transaction[];
+  delete: boolean;
 
 
   constructor(private route: ActivatedRoute, private budgetService: BudgetService, private router: Router,
-              private help: HelperService) { }
+              private help: HelperService, private db: DataStorageService) { }
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
@@ -34,6 +36,7 @@ export class CategoryDetailsComponent implements OnInit {
       }
       this.currentDateRange = this.setDateRange(this.selectedDate);
     });
+    this.delete = false;
   }
 
   changeDate(date: string): void {
@@ -165,6 +168,16 @@ export class CategoryDetailsComponent implements OnInit {
       sum += transaction.amount;
     });
     return sum;
+  }
+
+  onEdit(): void {
+    console.log('Editing!');
+  }
+
+  onDelete(): void {
+    this.budgetService.deleteCategory(this.categoryid);
+    this.router.navigate(['../'], {relativeTo: this.route});
+    this.db.deleteCategory(this.categoryid);
   }
 
   onBack(): void {
