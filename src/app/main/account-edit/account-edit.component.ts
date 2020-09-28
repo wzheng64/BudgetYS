@@ -22,8 +22,8 @@ export class AccountEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
-      this.id = params.id;
-      this.editMode = params.id != null;
+      this.id = params.accountid;
+      this.editMode = params.accountid != null;
     });
     this.initForm();
   }

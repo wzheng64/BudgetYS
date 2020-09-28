@@ -71,6 +71,29 @@ export class CategoryDetailsComponent implements OnInit {
     return dateString;
   }
 
+  getTotal(): number {
+    let sum = 0;
+    this.transactions.forEach((transaction: Transaction) => {
+      sum += transaction.amount;
+    });
+    return sum;
+  }
+
+  onEdit(): void {
+    console.log('Editing!');
+    this.router.navigate(['edit'], {relativeTo: this.route});
+  }
+
+  onDelete(): void {
+    this.budgetService.deleteCategory(this.categoryid);
+    this.router.navigate(['../'], {relativeTo: this.route});
+    this.db.deleteCategory(this.categoryid);
+  }
+
+  onBack(): void {
+    this.router.navigate(['../'], { relativeTo: this.route });
+  }
+
   private getTransactions(date: string | Date): Transaction[] {
     const transactions = [];
     // Only need to get the one week's worth of transaction
@@ -161,27 +184,4 @@ export class CategoryDetailsComponent implements OnInit {
     }
     return transactions;
   }
-
-  getTotal(): number {
-    let sum = 0;
-    this.transactions.forEach((transaction: Transaction) => {
-      sum += transaction.amount;
-    });
-    return sum;
-  }
-
-  onEdit(): void {
-    console.log('Editing!');
-  }
-
-  onDelete(): void {
-    this.budgetService.deleteCategory(this.categoryid);
-    this.router.navigate(['../'], {relativeTo: this.route});
-    this.db.deleteCategory(this.categoryid);
-  }
-
-  onBack(): void {
-    this.router.navigate(['../'], { relativeTo: this.route });
-  }
-
 }

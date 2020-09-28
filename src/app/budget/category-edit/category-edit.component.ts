@@ -21,36 +21,53 @@ export class CategoryEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
-      this.id = params.id;
-      this.editMode = params.id != null;
+      this.id = params.categoryid;
+      this.editMode = params.categoryid != null;
     });
     this.initForm();
   }
 
   onSubmit(): void {
-    console.log(this.categoryForm.value);
-    this.budgetService.addCategory(this.categoryForm.value);
-    this.db.storeCategories();
-    this.router.navigate(['../'], {relativeTo: this.route});
+    if (this.editMode) {
+      this.budgetService.modifyCategory(this.categoryForm.value);
+      this.db.updateCategory(this.id);
+      this.router.navigate(['../'], { relativeTo: this.route });
+    }
+    else {
+      this.budgetService.addCategory(this.categoryForm.value);
+      this.db.storeCategories();
+      this.router.navigate(['../'], { relativeTo: this.route });
+    }
   }
 
   onCancel(): void {
-    this.router.navigate(['../'], {relativeTo: this.route});
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 
   private initForm(): void {
     if (this.editMode) {
-      console.log('Editing current data!');
-    }
-    this.id = this.idService.generateCategory();
-    this.categoryForm = new FormGroup({
-      name: new FormControl(null, Validators.required),
-      transactions: new FormControl({}),
-      amount: new FormControl(null, [Validators.required,
+      const category = this.budgetService.getCategory(this.id);
+      this.categoryForm = new FormGroup({
+        name: new FormControl(category.name, Validators.required),
+        transactions: new FormControl(category.transactions),
+        amount: new FormControl(category.amount, [Validators.required,
         Validators.pattern(/^((0\.[0-9][1-9])|([1-9][0-9]*(\.[0-9]{2})?)|0|0.00)$/), Validators.min(0)]),
-      period: new FormControl('Week', [Validators.required]),
-      id: new FormControl(this.id),
-      subCategories: new FormControl({})
-    });
+        period: new FormControl(category.period, [Validators.required]),
+        id: new FormControl(this.id),
+        subCategories: new FormControl({})
+      });
+    }
+    else {
+      this.id = this.idService.generateCategory();
+      this.categoryForm = new FormGroup({
+        name: new FormControl(null, Validators.required),
+        transactions: new FormControl({}),
+        amount: new FormControl(null, [Validators.required,
+        Validators.pattern(/^((0\.[0-9][1-9])|([1-9][0-9]*(\.[0-9]{2})?)|0|0.00)$/), Validators.min(0)]),
+        period: new FormControl('Week', [Validators.required]),
+        id: new FormControl(this.id),
+        subCategories: new FormControl({})
+      });
+    }
   }
 }

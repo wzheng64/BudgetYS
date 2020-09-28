@@ -34,6 +34,11 @@
       <h4 class="text-center">{{category.name}}</h4>
       <h5 class="text-center">${{category.formatBalance()}} every {{category.period}}</h5>
       <div class="row">
+        <div class="col">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+      <div class="row">
         <div class="col align-self-center">
           <h2 class="text-center">Selected {{category.period}}</h2>
           <h3 class="text-center">{{currentDateRange}}</h3>

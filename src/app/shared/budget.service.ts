@@ -143,6 +143,14 @@ export class BudgetService {
     return categoryid in this.categories;
   }
 
+  modifyCategory(category: Category): void {
+    const categoryid = category.id;
+    this.categories[categoryid].name = category.name;
+    this.categories[categoryid].amount = category.amount;
+    this.categories[categoryid].period = category.period;
+    this.catChanged.next({... this.categories});
+  }
+
   deleteCategory(categoryid: string): void {
     this.idService.deleteCat(categoryid);
     delete this.categories[categoryid];

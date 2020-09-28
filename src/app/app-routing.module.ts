@@ -41,7 +41,9 @@ const appRoutes: Routes = [
       { path: '', component: CategorySummaryComponent },
       { path: 'new', component: CategoryEditComponent },
       { path: 'income', component: IncomeEditComponent },
-      { path: ':categoryid', component: CategoryDetailsComponent }
+      { path: ':categoryid', component: CategoryDetailsComponent, children: [
+        { path: 'edit', component: CategoryEditComponent }
+      ]}
     ]
   },
   { path: 'auth', component: AuthComponent, canActivate: [AuthRedirectGuard] }
