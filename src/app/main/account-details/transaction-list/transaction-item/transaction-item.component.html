@@ -1,97 +1,106 @@
-<div class="container">
-  <a title="Click for more details!" *ngIf="!editMode" class="list-group-item rounded account" (click)="showDescription = !showDescription">
+<a title="Click for more details!" *ngIf="!editMode" class="list-group-item rounded account"
+  (click)="showDescription = !showDescription">
+  <div class="row">
+    <div class="col">
+      {{ transaction.name }}
+    </div>
+    <div class="col">
+      {{ transaction.type }}{{ transaction.amount }}
+    </div>
+    <div class="col text-right">
+      On {{ transaction.date }}
+    </div>
+  </div>
+  <div *ngIf="showDescription">
+    <hr>
     <div class="row">
       <div class="col">
-        {{ transaction.name }}
-      </div>
-      <div class="col">
-        {{ transaction.type }}{{ transaction.amount }}
+        <p>{{ transaction.description }}</p>
       </div>
       <div class="col text-right">
-        On {{ transaction.date }}
+        <button class="btn btn-outline-secondary" (click)="onEdit();$event.stopPropagation()"
+          title="Edit Transaction"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pencil-square"
+            fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+            <path fill-rule="evenodd"
+              d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+          </svg></button>
+        <button class="btn btn-outline-secondary" (click)="onDelete();$event.stopPropagation()"
+          title="Delete Transaction">
+          <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+            <path fill-rule="evenodd"
+              d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+          </svg>
+        </button>
       </div>
     </div>
-    <div *ngIf="showDescription">
-      <hr>
+  </div>
+</a>
+<div class="row" *ngIf="editMode">
+  <div class="col">
+    <form [formGroup]="transactionForm" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" formControlName="name" class="form-control">
+          </div>
+          <span *ngIf="!transactionForm.get('name').valid && transactionForm.get('name').touched">A name is
+            required!</span>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" id="date" formControlName="date" class="form-control">
+          </div>
+        </div>
+      </div>
       <div class="row">
         <div class="col">
-          <p>{{ transaction.description }}</p>
-        </div>
-        <div class="col text-right">
-          <button class="btn btn-outline-secondary" (click)="onEdit();$event.stopPropagation()" title="Edit Transaction"><svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-pencil-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-          </svg></button>
-          <button class="btn btn-outline-secondary" (click)="onDelete();$event.stopPropagation()" title="Delete Transaction">
-            <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-              <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-              <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-            </svg>
-          </button>
+          <div class="form-group">
+            <label for="description">Description (optional)</label>
+            <textarea type="text" id="description" formControlName="description" class="form-control"
+              rows="3"></textarea>
+          </div>
         </div>
       </div>
-    </div>
-  </a>
-  <div class="row" *ngIf="editMode">
-    <div class="col">
-      <form [formGroup]="transactionForm" (ngSubmit)="onSubmit()">
-        <div class="row">
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input type="text" id="name" formControlName="name" class="form-control">
-            </div>
-            <span *ngIf="!transactionForm.get('name').valid && transactionForm.get('name').touched">A name is required!</span>
-          </div>
-          <div class="col-md-3">
-            <div class="form-group">
-              <label for="date">Date</label>
-              <input type="date" id="date" formControlName="date" class="form-control">
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            <div class="form-group">
-              <label for="description">Description (optional)</label>
-              <textarea type="text" id="description" formControlName="description" class="form-control"
-                rows="3"></textarea>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-4">
-            <div class="form-group">
-              <label for="amount">Amount</label>
-              <div class="input-group">
-                <div class="input-group-prepend">
-                  <select name="type" id="type" formControlName="type">
-                    <option *ngFor="let t of ['-', '+']" [value]="t">{{ t }}</option>
-                  </select>
-                  <span class="input-group-text" id="basic-addon1">$</span>
-                </div>
-                <input type="text" id="amount" formControlName="amount" class="form-control">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="amount">Amount</label>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <select name="type" id="type" formControlName="type">
+                  <option *ngFor="let t of ['-', '+']" [value]="t">{{ t }}</option>
+                </select>
+                <span class="input-group-text" id="basic-addon1">$</span>
               </div>
-              <span *ngIf="!transactionForm.get('amount').valid && transactionForm.get('amount').touched">Please enter a valid amount.</span>
+              <input type="text" id="amount" formControlName="amount" class="form-control">
             </div>
-          </div>
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="category">Category (optional)</label>
-              <select name="category" id="category" formControlName="category">
-                <option [value]=""></option>
-                <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
-              </select>
-            </div>
+            <span *ngIf="!transactionForm.get('amount').valid && transactionForm.get('amount').touched">Please enter a
+              valid amount.</span>
           </div>
         </div>
-        <div class="row">
-          <div class="col">
-            <button class="btn btn-outline-light" type="submit" [disabled]="!transactionForm.valid">Confirm</button>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="category">Category (optional)</label>
+            <select name="category" id="category" formControlName="category">
+              <option [value]=""></option>
+              <option *ngFor="let category of categories" [value]="category.id">{{category.name}}</option>
+            </select>
           </div>
-          <button class="btn btn-outline-danger float-right" type="button" (click)="onCancel()">Cancel</button>
         </div>
-      </form>
-    </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <button class="btn btn-outline-light" type="submit" [disabled]="!transactionForm.valid">Confirm</button>
+        </div>
+        <button class="btn btn-outline-danger float-right" type="button" (click)="onCancel()">Cancel</button>
+      </div>
+    </form>
   </div>
 </div>

@@ -1,7 +1,3 @@
-.account {
-  color: #3F403F;
-}
-
 .account:hover{
   text-decoration: none;
   background: #CED0CE;

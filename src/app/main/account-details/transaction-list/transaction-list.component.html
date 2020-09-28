@@ -1,14 +1,16 @@
 <div class="container">
-  <div class="row">
-    <div class="col text-left ml-3">
-      <h6>Name</h6>
+  <li class="list-group-item rounded">
+    <div class="row">
+      <div class="col">
+        <h6>Name</h6>
+      </div>
+      <div class="col">
+        <h6>Amount</h6>
+      </div>
+      <div class="col text-right">
+        <h6>Date</h6>
+      </div>
     </div>
-    <div class="col ml-1">
-      <h6>Amount</h6>
-    </div>
-    <div class="col text-center">
-      <h6>Date</h6>
-    </div>
-  </div>
+  </li>
   <app-transaction-item *ngFor="let t of transactions; let i=index" [transaction]="t" [index]="i"></app-transaction-item>
 </div>
