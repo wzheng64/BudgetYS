@@ -2,3 +2,11 @@
   background-color: #2E4057;
   border: 3px solid #384c66;
 }
+.row.display-flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+.row.display-flex > [class*='col'] {
+  display: flex;
+  flex-direction: column;
+}

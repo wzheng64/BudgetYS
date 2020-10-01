@@ -1,3 +1,4 @@
+<app-search-bar></app-search-bar>
 <div class="container">
   <li class="list-group-item rounded">
     <div class="row">
@@ -12,5 +13,7 @@
       </div>
     </div>
   </li>
-  <app-transaction-item *ngFor="let t of transactions; let i=index" [transaction]="t" [index]="i"></app-transaction-item>
+  <app-transaction-item *ngFor="let t of currentTransactions; let i=index" [transaction]="t" [index]="i"></app-transaction-item>
+  <hr>
+  <button class="btn btn-light mx-1 btn-sm" *ngFor="let n of pages" value="n" (click)="changePage(n)">{{ n }}</button>
 </div>

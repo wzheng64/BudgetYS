@@ -120,7 +120,7 @@ export class AccountService {
     this.accountsChanged.next({...this.accounts});
   }
 
-  public getTransactions(accID: number): {[date: number]: {[s: string]: Transaction}} {
+  public getTransactions(accID: string): {[date: number]: {[s: string]: Transaction}} {
     return {... this.accounts[accID].transactions};
   }
 

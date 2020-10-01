@@ -1,0 +1,36 @@
+<div class="container">
+  <div class="row">
+    <div class="col-4">
+      <label for="search">Search:</label>
+      <div class="input-group">
+        <input type="text" placeholder="Search names/descriptions here" id="search" class="form-control" (input)="onSearch($event.target.value)" [value]="searchData.search">
+      </div>
+    </div>
+    <div class="col-5" *ngIf="onAccount">
+      <div class="row">
+        <div class="col">
+          <label for="begindate">Date Begin:</label>
+        </div>
+        <div class="col">
+          <label for="enddate">Date End:</label>
+        </div>
+      </div>
+      <div class="input-group" [ngClass]="{'invalid': searchData.begindate > searchData.enddate}">
+        <input type="date" id="begindate" class="form-control" [(ngModel)]="searchData.begindate" (change)="onDateChange()">
+        <input type="date" id="enddate" class="form-control" [(ngModel)]="searchData.enddate" (change)="onDateChange()">
+      </div>
+      <div *ngIf="searchData.begindate > searchData.enddate">
+        <p>Your start date must be before your end date.</p>
+      </div>
+    </div>
+    <div class="" [ngClass]="{'col-3': onAccount, 'col': onAccount}">
+      <label for="begindate">Sort By:</label>
+      <div class="input-group">
+        <select class="form-control" id="remainder" (change)="onSortChange($event.target.value)">
+          <option *ngFor="let opt of sortOptions" [defaultSelected]="searchData.sortString == opt" [value]="opt">{{ opt }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+<hr>

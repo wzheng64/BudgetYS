@@ -15,7 +15,7 @@
     <hr>
     <div class="row">
       <div class="col">
-        <p>{{ transaction.description }}</p>
+        <p class="text-wrap" style="word-break:break-all">{{ transaction.description }}</p>
       </div>
       <div class="col text-right">
         <button class="btn btn-outline-secondary" (click)="onEdit();$event.stopPropagation()"
