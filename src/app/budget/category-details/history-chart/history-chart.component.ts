@@ -3,7 +3,7 @@ import { Category } from 'src/app/shared/category.model';
 import { BudgetService } from 'src/app/shared/budget.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { ChartDataSets, ChartOptions, Tooltip } from 'chart.js';
+import { ChartDataSets, ChartOptions } from 'chart.js';
 import { Label } from 'ng2-charts';
 
 @Component({
