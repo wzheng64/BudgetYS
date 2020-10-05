@@ -97,14 +97,14 @@ export class CategorySummaryComponent implements OnInit, OnDestroy {
     else if (this.selectedPeriod === 'Bi-Weekly') {
       const week = this.help.getWeek(date);
       const beginningOfWeek = new Date(week);
-      const endOfWeek = new Date(week + 1123000000);
+      const endOfWeek = new Date(week + 1123200000);
       dateString = beginningOfWeek.getUTCMonth() + 1 + '/' + beginningOfWeek.getUTCDate() + '/' + beginningOfWeek.getUTCFullYear()
         + ' - ' + (endOfWeek.getUTCMonth() + 1) + '/' + endOfWeek.getUTCDate() + '/' + endOfWeek.getUTCFullYear();
     }
     else {
       const selectedDate = new Date(date);
       const beginningOfMonth = new Date(Date.UTC(selectedDate.getUTCFullYear(), selectedDate.getUTCMonth()));
-      const endOfMonth = new Date(Date.UTC(beginningOfMonth.getUTCFullYear(), beginningOfMonth.getUTCMonth() + 1));
+      const endOfMonth = new Date(Date.UTC(beginningOfMonth.getUTCFullYear(), (beginningOfMonth.getUTCMonth() + 1), 0));
       dateString = beginningOfMonth.getUTCMonth() + 1 + '/' + beginningOfMonth.getUTCDate() + '/' + beginningOfMonth.getUTCFullYear()
         + ' - ' + (endOfMonth.getUTCMonth() + 1) + '/' + endOfMonth.getUTCDate() + '/' + endOfMonth.getUTCFullYear();
     }

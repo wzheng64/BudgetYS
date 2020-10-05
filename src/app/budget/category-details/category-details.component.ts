@@ -1,3 +1,5 @@
+import { SearchService } from 'src/app/shared/search.service';
+import { Subject } from 'rxjs/internal/Subject';
 import { DataStorageService } from './../../shared/data-storage.service';
 import { HelperService } from './../../shared/helper.service';
 import { Category } from './../../shared/category.model';
@@ -19,10 +21,11 @@ export class CategoryDetailsComponent implements OnInit {
   selectedDate: string;
   transactions: Transaction[];
   delete: boolean;
+  transactionsChanged: Subject<Transaction[]>;
 
 
   constructor(private route: ActivatedRoute, private budgetService: BudgetService, private router: Router,
-              private help: HelperService, private db: DataStorageService) { }
+              private help: HelperService, private db: DataStorageService, private searchService: SearchService) { }
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
@@ -41,6 +44,7 @@ export class CategoryDetailsComponent implements OnInit {
 
   changeDate(date: string): void {
     this.currentDateRange = this.setDateRange(date);
+    this.selectedDate = date;
     localStorage.setItem(`${this.categoryid}-selection`, date);
   }
 
@@ -68,6 +72,7 @@ export class CategoryDetailsComponent implements OnInit {
         + ' - ' + (endOfMonth.getUTCMonth() + 1) + '/' + endOfMonth.getUTCDate() + '/' + endOfMonth.getUTCFullYear();
     }
     this.transactions = this.getTransactions(date);
+    this.searchService.categoryDateChanged.next(this.transactions);
     return dateString;
   }
 
@@ -80,7 +85,6 @@ export class CategoryDetailsComponent implements OnInit {
   }
 
   onEdit(): void {
-    console.log('Editing!');
     this.router.navigate(['edit'], {relativeTo: this.route});
   }
 
@@ -94,7 +98,11 @@ export class CategoryDetailsComponent implements OnInit {
     this.router.navigate(['../'], { relativeTo: this.route });
   }
 
-  private getTransactions(date: string | Date): Transaction[] {
+  sendTransactions(): Transaction[] {
+    return this.transactions;
+  }
+
+  getTransactions(date: string | Date): Transaction[] {
     const transactions = [];
     // Only need to get the one week's worth of transaction
     if (this.category.period === 'Week') {

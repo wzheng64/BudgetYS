@@ -22,6 +22,7 @@ export class TransactionItemComponent implements OnInit, OnDestroy {
   categories: { [s: string]: string }[];
   accountid: string;
   catSub: Subscription;
+  canModify: boolean;
 
   constructor(private accountService: AccountService, private route: ActivatedRoute,
               private db: DataStorageService, private budgetService: BudgetService) { }
@@ -37,7 +38,13 @@ export class TransactionItemComponent implements OnInit, OnDestroy {
       }
     });
     this.route.params.subscribe((params: Params) => {
-      this.accountid = params.accountid;
+      if ('accountid' in params) {
+        this.accountid = params.accountid;
+        this.canModify = true;
+      }
+      else {
+        this.canModify = false;
+      }
     });
     this.categories = [];
     const categories = this.budgetService.getCategories();

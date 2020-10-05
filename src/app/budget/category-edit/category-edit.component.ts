@@ -1,3 +1,4 @@
+import { HelperService } from './../../shared/helper.service';
 import { DataStorageService } from 'src/app/shared/data-storage.service';
 import { BudgetService } from './../../shared/budget.service';
 import { IdService } from './../../shared/id.service';
@@ -17,7 +18,7 @@ export class CategoryEditComponent implements OnInit {
   periods = ['Week', '2 Weeks', 'Month'];
 
   constructor(private route: ActivatedRoute, private router: Router, private idService: IdService,
-              private budgetService: BudgetService, private db: DataStorageService) { }
+              private budgetService: BudgetService, private db: DataStorageService, private help: HelperService) { }
 
   ngOnInit(): void {
     this.route.params.subscribe((params: Params) => {
@@ -28,13 +29,18 @@ export class CategoryEditComponent implements OnInit {
   }
 
   onSubmit(): void {
+    const incomingCategory = this.categoryForm.value;
     if (this.editMode) {
-      this.budgetService.modifyCategory(this.categoryForm.value);
+      const week = this.help.getWeek(new Date().toLocaleString('sv-SE').split(' ')[0]);
+      this.budgetService.modifyCategory(incomingCategory, week);
       this.db.updateCategory(this.id);
       this.router.navigate(['../'], { relativeTo: this.route });
     }
     else {
-      this.budgetService.addCategory(this.categoryForm.value);
+      incomingCategory.budgetHistories = {
+        [this.help.getWeek(new Date().toLocaleString('sv-SE').split(' ')[0])]: this.categoryForm.value.amount
+      };
+      this.budgetService.addCategory(incomingCategory);
       this.db.storeCategories();
       this.router.navigate(['../'], { relativeTo: this.route });
     }

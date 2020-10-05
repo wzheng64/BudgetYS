@@ -12,7 +12,7 @@ import { Transaction } from 'src/app/shared/transaction.model';
   styleUrls: ['./transaction-list.component.css']
 })
 export class TransactionListComponent implements OnInit, OnDestroy {
-  @Input() transactions: Transaction[];
+  transactions: Transaction[];
   workingTransactions: Transaction[];
   currentTransactions: Transaction[];
   transSub: Subscription;
@@ -21,7 +21,7 @@ export class TransactionListComponent implements OnInit, OnDestroy {
   dateRangeSub: Subscription;
   searchData: { search: string, begindate: string, enddate: string, sortString: string };
   pages: number[];
-  lengthOfLists = 12;
+  lengthOfLists = 10;
   id: string;
 
   constructor(private accountService: AccountService, private route: ActivatedRoute, private searchService: SearchService,
@@ -86,7 +86,6 @@ export class TransactionListComponent implements OnInit, OnDestroy {
           this.workingTransactions.push(transaction);
         }
       });
-      console.log(this.workingTransactions);
       this.sortTransactions(this.searchData.sortString);
       this.createPages();
       this.changePage(1);
@@ -172,7 +171,6 @@ export class TransactionListComponent implements OnInit, OnDestroy {
   }
 
   private sortTransactions(sortString: string): void {
-    console.log(sortString);
     if (sortString === 'Name (A-Z)') {
       this.workingTransactions.sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1);
     }

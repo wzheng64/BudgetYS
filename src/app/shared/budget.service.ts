@@ -123,7 +123,9 @@ export class BudgetService {
   }
 
   addCategory(cat: Category): void {
-    this.categories[cat.id] = new Category(cat.name, cat.transactions, cat.amount, cat.id, cat.period, cat.subCategories);
+    this.categories[cat.id] = new Category(
+      cat.name, cat.transactions, cat.amount, cat.id, cat.period, cat.subCategories, cat.budgetHistories
+    );
     this.catChanged.next({... this.categories});
   }
 
@@ -143,11 +145,12 @@ export class BudgetService {
     return categoryid in this.categories;
   }
 
-  modifyCategory(category: Category): void {
+  modifyCategory(category: Category, week: number): void {
     const categoryid = category.id;
     this.categories[categoryid].name = category.name;
     this.categories[categoryid].amount = category.amount;
     this.categories[categoryid].period = category.period;
+    this.categories[categoryid].budgetHistories[week] = category.amount;
     this.catChanged.next({... this.categories});
   }
 

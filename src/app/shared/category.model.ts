@@ -7,15 +7,17 @@ export class Category {
   public id: string;
   public period: string;
   public subCategories: {[categoryid: string]: Category};
+  public budgetHistories: { [week: number]: number };
 
   constructor(name: string, transactions: {[date: number]: {[s: string]: Transaction}}, balance: number, id: string,
-              period: string, subs: {[s: string]: Category}) {
+              period: string, subs: {[s: string]: Category}, budgetHistories: { [week: number]: number }) {
     this.name = name;
     this.transactions = transactions;
     this.amount = balance;
     this.period = period;
     this.id = id;
     this.subCategories = subs;
+    this.budgetHistories = budgetHistories;
   }
 
   public formatBalance(): string {

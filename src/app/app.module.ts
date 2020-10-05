@@ -32,6 +32,8 @@ import { CategoryEditComponent } from './budget/category-edit/category-edit.comp
 import { CategoryItemComponent } from './budget/categories-list/category-item/category-item.component';
 import { CategorySummaryComponent } from './budget/category-summary/category-summary.component';
 import { SearchBarComponent } from './main/account-details/transaction-list/search-bar/search-bar.component';
+import { CategoryTransactionsListComponent } from './budget/category-details/category-transactions-list/category-transactions-list.component';
+import { HistoryChartComponent } from './budget/category-details/history-chart/history-chart.component';
 
 @NgModule({
   declarations: [
@@ -60,6 +62,8 @@ import { SearchBarComponent } from './main/account-details/transaction-list/sear
     CategoryItemComponent,
     CategorySummaryComponent,
     SearchBarComponent,
+    CategoryTransactionsListComponent,
+    HistoryChartComponent,
   ],
   imports: [
     BrowserModule,

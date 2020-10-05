@@ -157,7 +157,8 @@ export class DataStorageService {
                 const cat = categories[id];
                 const transactions = cat.transactions ? cat.transactions : {};
                 const subCat = cat.subCategories ? cat.subCategories : {};
-                categories[id] = new Category(cat.name, transactions, cat.amount, id, cat.period, subCat);
+                const historyCat = cat.budgetHistories ? cat.budgetHistories : {};
+                categories[id] = new Category(cat.name, transactions, cat.amount, id, cat.period, subCat, historyCat);
               }
             }
             return categories;

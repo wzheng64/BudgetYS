@@ -1,0 +1,22 @@
+<div class="row">
+  <div class="col">
+    <label for="begindate">Date Begin:</label>
+  </div>
+  <div class="col">
+    <label for="enddate">Date End:</label>
+  </div>
+</div>
+<div class="input-group" [ngClass]="{'invalid': dates.beginDate > dates.endDate}">
+  <input type="date" id="begindate" class="form-control" [(ngModel)]="dates.beginDate" (change)="onDateChange()">
+  <input type="date" id="enddate" class="form-control" [(ngModel)]="dates.endDate" (change)="onDateChange()">
+</div>
+<div *ngIf="dates.beginDate > dates.endDate">
+  <p>Your start date must be before your end date.</p>
+</div>
+<hr>
+<h5 class="text-center">History of Spending</h5>
+<div class="row">
+    <canvas baseChart [datasets]="historyData.numbers" [labels]="historyData.labels" [options]="historyData.options"
+      [chartType]="'bar'">
+    </canvas>
+</div>
